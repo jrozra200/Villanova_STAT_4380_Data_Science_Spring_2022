@@ -20,9 +20,9 @@ site, you'll see download links for your Operating System. Download the right
 one and follow the installation instructions.
 
 I think I set mine up using [`homebrew`](https://formulae.brew.sh/formula/r) 
-(for Mac users only - also, this is *maybe* more advanced). 
+(for Mac users only - also, this is *may be* more advanced). 
 
-#### Install RStudio
+## Install RStudio
 
 Go to the
 [RStudio downloads page](https://www.rstudio.com/products/rstudio/download/#download)
@@ -31,7 +31,7 @@ we are ready to start playing with `R`.
 
 [`homebrew`](https://formulae.brew.sh/cask/rstudio) also offers an option via cask.
 
-#### Install R Packages
+## Install R Packages
 
 There are a few packages we will be using throughout the class. There are likely 
 more that I haven't identified here, which we will install as we go along. 
