@@ -10,7 +10,7 @@
 **Office Hours**: 	    Office Hours by Appointment  
 **Office Location**: 	Contact me to set up an appointment  
 
-Textbooks:  
-1. [Modern Data Science with R](https://mdsr-book.github.io/mdsr2e/), Second Edition, byBaumer, Kaplan, and Horton  
-2. [R for Data Science](https://r4ds.had.co.nz/index.html), by Wickham, Grolemund  
+**Textbooks:**  
+1. [Modern Data Science with R](https://mdsr-book.github.io/mdsr2e/), Second Edition, by Baumer, Kaplan, and Horton  
+2. [R for Data Science](https://r4ds.had.co.nz/index.html), by Wickham, and Grolemund  
 3. [Hands-On Programming with R](https://rstudio-education.github.io/hopr/), by Grolemund  

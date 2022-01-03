@@ -4,6 +4,9 @@ This class requires that you have the R programming langugage and the RStudio
 Interactive Development Enviroment (IDE) installed on your computer. We will be 
 leveraging RStudio for all facets of this class. 
 
+I have written my own instructions below, but the book outlines this in 
+[Appendix B](https://mdsr-book.github.io/mdsr2e/ch-R.html#appR:install).
+
 1. [Install R](#install-r)
 2. [Install RStudio](#install-rstudio)
 3. [Install Initial R Packages](#install-r-packages)
