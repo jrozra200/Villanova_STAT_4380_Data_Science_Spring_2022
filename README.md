@@ -11,3 +11,5 @@
 **Office Location**: 	Contact me to set up an appointment  
 
 **Textbooks:**  [Modern Data Science with R](https://mdsr-book.github.io/mdsr2e/), Second Edition, by Baumer, Kaplan, and Horton  
+
+[**Sylabus**](https://github.com/jrozra200/Villanova_STAT_4380_Data_Science_Spring_2022/blob/main/Released%20to%20Students/STAT%204380%20Section%20001%20Syllabus.pdf)
