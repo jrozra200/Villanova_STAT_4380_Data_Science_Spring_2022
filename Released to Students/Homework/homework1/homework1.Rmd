@@ -1,0 +1,42 @@
+---
+title: "Homework 1"
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+---
+
+**Class**:      STATS 4380 - Data Science  
+**Term**:       Spring 2022   
+**Prof**:       Jacob Rozran  
+**Assigned**:   January 13, 2022  
+**Due**:        January 18, 2022
+
+# Assignment
+
+1. Create a new R Script in RStudio and save it as `homework_1_your_name.R` in 
+the directory of your choice.
+2. Using comments, create a header that includes your name, the class name, 
+the homework assignment (homework 1), and the due date - all on separate lines.
+3. Each of the following commands should be on its own line(s) AFTER a comment 
+line explaining which problem this is:
+    a. Determine the square root of 100489
+    b. Manually count the number of vowels in your first name. Manually count 
+    the number of consonants in your first name. Finally, output the calculation 
+    the ratio of vowels to consonants are in your name. (For example, Jake has 
+    2 vowels and 2 consonants and the ratio is 1).
+    c. One state legislature tried to pass a law that "simplified" the value of 
+    pi to make it easier for people to use. They wanted to make it 22/7. Use a 
+    logical statement in R to demonstrate that pi is NOT equal to 22/7. (Unless 
+    you overwrite it, the variable `pi` is already in R (to only six decimal 
+    places)).
+    d. Confirm that the square root of 150 is greater than 12 and less than 13.
+    e. Load the package `gapminder` (*hint: there may be a step before you are *
+    *able to load the package.*)
+    f. Use the `head()` function on the `gapminder` data to show the first 6 
+    rows of the dataset. State the variables that exist in the dataset.
+    g. Run the `tail` function on the `gapminder` data. When you do, add a 
+    second argument to the `tail` function to print the last 10 observations in 
+    the `gapminder` dataset.
+4. Upload your final homework to 
+[blackboard](https://elearning.villanova.edu/webapps/assignment/uploadAssignment?content_id=_3688558_1&course_id=_149420_1&group_id=&mode=cpview).
