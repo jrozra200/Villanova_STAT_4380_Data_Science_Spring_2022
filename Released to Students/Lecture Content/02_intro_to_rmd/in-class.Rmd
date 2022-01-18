@@ -1,0 +1,161 @@
+---
+title: "Intro to RMarkdown"
+author: "Jake Rozran"
+date: "`r Sys.Date()`"
+output: 
+    html_document:
+        toc: true
+        toc_float:
+            smooth_scroll: true
+            collapsed: true
+---
+
+# How to write `.md`
+
+This is just regular paragraph text.  
+And this is more plain text.
+
+*this is italics* OR _italics_  
+**this is bold** OR __bold__  
+x^2^  
+~~this text will be struck out~~  
+
+[I want to hyperlink this line.](www.google.com)
+
+We talked about making things `look like code`.  
+But also, we can do R code like this `r 1 + 1`.  
+
+```
+here is some code
+and another line of bullshit code
+```
+
+# Header 1
+
+## Header 2
+
+### Header 3
+
+#### Header 4
+
+##### Header 5
+
+###### Header 6
+
+$A = \pi*r^{2}$ 
+
+***  
+
+* unordered list
+* item 2
+    + sub-item 1
+    + sub-item 2
+
+- item 1
+    - item 2
+    - item 3
+- item 4
+    - item 5
+
+1. ordered list
+2. item 2
+    a. sub-item 1
+    b. sub-item 2
+
+Table Header  | Second Header | this is a third column
+------------- | ------------- | ----------------------
+Table Cell    | Cell 2 | cell 6
+Cell 3        | Cell 4 | 27
+
+```
+Plain text  
+End a line with two spaces to start a new paragraph.  
+*italics* and _italics_  
+**bold** and __bold__  
+superscript^2^  
+~~strikethrough~~  
+[link](www.rstudio.com)  
+`inline code`  
+\```
+code chunk
+with lots of lines
+\```  
+
+# Header 1
+
+## Header 2
+
+### Header 3
+
+#### Header 4
+
+##### Header 5
+
+###### Header 6
+
+endash: --  
+emdash: ---  
+ellipsis: ...  
+inline equation: $A = \pi*r^{2}$  
+
+horizontal rule (or slide break):  
+
+***  
+
+> block quote  
+
+* unordered list
+* item 2
+    + sub-item 1
+    + sub-item 2
+
+1. ordered list
+2. item 2
+    + sub-item 1
+    + sub-item 2
+
+Table Header  | Second Header
+------------- | -------------
+Table Cell    | Cell 2
+Cell 3        | Cell 4
+```
+
+Here is some more inline R code. `r sqrt(10)`.
+
+```{r}
+this <- "is text "
+that <- "is more text"
+
+text <- paste0(this, that)
+
+print(text)
+```
+
+```{r you_name_chunk, echo = FALSE}
+hist(rnorm(1000))
+```
+
+
+```{r another_chunk, message = FALSE}
+library(tidyverse)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
