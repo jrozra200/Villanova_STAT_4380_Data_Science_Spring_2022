@@ -1,0 +1,249 @@
+---
+title: "Working with Data - Part 1"
+author: "Jake Rozran"
+date: "`r Sys.Date()`"
+output: 
+    html_document:
+        toc: true
+        toc_float:
+            smooth_scroll: true
+            collapsed: false
+        
+---
+
+# Assignment
+
+```{r assignment}
+x <- c(5, 7, 9, 13, -4, 8) # preferred
+x
+x = c(5, 7, 9, 13, -4, 8) # equivalent
+print(x) # Equivalent to just typing x
+
+c(5, 7, 9, 13, -4, 8) -> x # also works
+x
+```
+
+The above code creates a vector of length 6 using the c() function to 
+concatenate scalars.
+
+*Note: `c(5, 7, 9, 13, -4, 8) = x` will NOT work.*
+
+# Useful Commands for Data Entry
+
+```{r data_entry}
+60:72 # Integers from 60 to 72
+seq(60, 72) # Also integers from 60 to 72
+
+seq(60, 72, by = 2) # Also integers from 60 to 72, but by 2
+seq(60, 70, length = 3) # Three equally spaced values
+
+rep(60, 5) # Repeat the value 60, 5 times
+rep(c(60, 72), 3) # Repeat the sequence c(60, 72) 3 times.
+
+rep(c(60, 66, 72), c(1, 2, 3)) # One 60, two 66s, and three 72s
+```
+
+# Missing Data in R
+
+- Missing data in R is denoted by `NA`.
+- Some functions produce `NA` when any data are missing
+
+```{r nas}
+mean(c(1, 2, NA))
+```
+
+If a function has the `na.rm` argument, you can use that (preferred) to get rid 
+of pesky `NA`s - IRL, you better understand why there are `NA`s in your data, or 
+else you might be calculating something unintended!
+
+Also, if there is no `na.rm` argument, you can leverage the function `na.omit()`.
+
+```{r no_more_nas}
+mean(c(1, 2, NA), na.rm = TRUE) # Preferred for mean function
+
+mean(na.omit(c(1, 2, NA))) # Also works
+```
+
+# Data Classes
+
+There are six basic data types: `logical`, `character`, `numeric` (which can be 
+further broken down into `integer`, `double`, and `complex`), and `raw.` 
+
+## Factors
+
+There are also factors, but they are annoying, so we won't use them much
+
+```{r factors}
+z <- factor(c("x", "y", "z"))
+z
+z <- append(z, c("a", "b", "c"))
+z
+```
+
+This happens because factors are stored internally as integers that correspond 
+to the id’s of the factor levels. So we get the integer of the "level" instead 
+of the actual character value. 
+
+This is just much easier to deal with and gives the expected result:
+
+```{r char}
+z <- c("x", "y", "z")
+z <- append(z, c("a", "b", "c"))
+z
+```
+
+# Vectors 
+
+## Data Selection for Vectors
+
+Since vector operations are so fundamental in R, it is important to be able to 
+access (or index) elements within these vectors. Many different ways of indexing 
+vectors are available.
+
+```{r vectors}
+x <- c(5, 7, 9, 13, -4, 8)
+
+x[2] # Gets the second item from the vector x
+x[c(2, 4)] # Gets the second and fourth item from the vector x
+x[c(TRUE, TRUE, TRUE, TRUE, TRUE, FALSE)] # Only returns those values that are TRUE
+x[1:5] # Returns the first through the fifth values of x
+x[-6] # Returns x without the sixth value
+```
+
+Vectors are recycled if needed; for example, when comparing each of the elements 
+of a vector to a scalar.
+
+```{r vec_ops}
+x > 8 # Greater than
+x < 8 # Less than
+x == 7 # Equal
+x != 7 # Not equal
+x <= 5 # Less than or equal to
+x >= 5 # Greater than or equal to
+```
+
+## Side Note about `TRUE` and `FALSE`
+
+ALSO - `TRUE` == 1 and `FALSE` == 0
+
+```{r sum_true}
+sum(x > 8) # Count of how many elements meet the condition x > 8
+```
+
+## Operators & Vectors
+
+Operators can also be done on a vector
+
+```{r vec_arth}
+x + 1
+x - 1
+x * 4
+x / 2
+x^3
+x %% 6
+x %/% 5
+```
+
+You can also do these operations on two vectors.
+
+```{r more_vec}
+y <- c(20, 13, 17, 92, 1, 4)
+
+x + y
+x^y
+x - y
+x * y
+```
+
+## The %in% command
+
+```{r in_cmd}
+"c" %in% c("a", "b", "c", "d", "e", "f")
+"z" %in% c("a", "b", "c", "d", "e", "f")
+```
+
+# Matricies
+
+A matrix is basically a 2 dimensional vector (all a single type of variable)
+
+```{r create_matrix}
+A <- matrix(x, 2, 3) # Creates a matrix from x
+A 
+```
+
+You can also see that a matrix is also a vector.
+
+```{r checkout_the_matrix}
+is.matrix(A) # Is A a matrix?
+is.vector(A) # Is A a vector?
+is.matrix(x) # Is x a matrix?
+is.vector(x) # Is x a vector?
+is.numeric(x) # Is x a numeric?
+is.numeric(A) # Is A a numeric?
+```
+
+We can find items in the matrix, the same as we can with a vector. The 
+difference is that we have to provide both a row and a column (in that order).
+
+```{r find_matrix_items}
+A[2, 3] # Give me the item in the 2nd row and 3rd column
+A[, 1] # Give me the items in the 1st column
+A[1, ] # Give me the items in the 1st row
+```
+
+# Data Frames
+
+Data Frames are similar to matricies: 2 dimensional. They will 
+support different types of data, though. 
+
+```{r df}
+ds <- data.frame(x, y) # Create a data frame with x and y
+ds
+```
+
+We can do some basic things to see summary stats of a data frame.
+
+```{r df_functions}
+dim(ds) # What are the dimensions of ds?
+str(ds) # What is the structure of ds?
+summary(ds) # What is the summary of ds?
+```
+
+Create a new data frame with a few different data types in it
+
+```{r diff_df}
+new_df <- data.frame(name = c("Jacob", "Jingle", "Heimer", "Schmidt"),
+                     age = c(14, 22, 100, 9),
+                     is_old = c(FALSE, FALSE, TRUE, FALSE))
+
+dim(new_df) # What are the dimensions of new_df?
+str(new_df) # What is the structure of new_df?
+summary(new_df) # What is the summary of new_df?
+```
+
+There are also a few different ways we can find things in a data frame:
+
+```{r find_df}
+new_df[2, 3] # Can find items by row and column number
+new_df[, c("name", "age")] # Can find items by column names
+new_df[1, c("name", "age")] # Can find items by column names and row number
+new_df[1, "name"] # Can find items by column names and row number
+new_df$is_old[2] # Can specify the column name behind the $ and then the row number
+new_df$is_old # Can specify the column name behind the $ without the row number
+```
+
+Let's create a (nonsensical) bigger data frame to see how head and tail work. 
+We can use the rbind command (which just binds a data frame by rows, or 
+basically stacks data frames on top of each other).
+
+```{r head_tail}
+another_df <- rbind(new_df, 
+                    new_df,
+                    new_df,
+                    new_df,
+                    new_df)
+head(another_df) # lets us see the first 6 rows (by default)
+?head
+head(another_df, n = 5) # lets us see the first 5 rows
+tail(another_df) # lets us see the last 6 rows (by default)
+```
