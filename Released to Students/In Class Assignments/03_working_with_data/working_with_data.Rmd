@@ -62,7 +62,7 @@ Use the `summary()` command to get all the summary statistics for the weight los
 variable in kilograms. (add a chunk)
 
 
-Use an if…else statement to create a new variable called `weightgain` which 
+Use an `if…else` statement to create a new variable called `weightgain` which 
 equals “lost” if they lost weight and “gain” otherwise. Verify that it’s a 
 character variable by using the `is.character()` function. (add a chunk)
 
