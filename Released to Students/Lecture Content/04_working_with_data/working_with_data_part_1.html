@@ -11,7 +11,7 @@
 
 <meta name="author" content="Jake Rozran" />
 
-<meta name="date" content="2022-01-10" />
+<meta name="date" content="2022-01-24" />
 
 <title>Working with Data - Part 1</title>
 
@@ -249,7 +249,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Working with Data - Part 1</h1>
 <h4 class="author">Jake Rozran</h4>
-<h4 class="date">2022-01-10</h4>
+<h4 class="date">2022-01-24</h4>
 
 </div>
 
@@ -395,131 +395,6 @@ x + y</code></pre>
 <pre class="r"><code>&quot;z&quot; %in% c(&quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;d&quot;, &quot;e&quot;, &quot;f&quot;)</code></pre>
 <pre><code>## [1] FALSE</code></pre>
 </div>
-</div>
-<div id="matricies" class="section level1">
-<h1>Matricies</h1>
-<p>A matrix is basically a 2 dimensional vector (all a single type of variable)</p>
-<pre class="r"><code>A &lt;- matrix(x, 2, 3) # Creates a matrix from x
-A </code></pre>
-<pre><code>##      [,1] [,2] [,3]
-## [1,]    5    9   -4
-## [2,]    7   13    8</code></pre>
-<p>You can also see that a matrix is also a vector.</p>
-<pre class="r"><code>is.matrix(A) # Is A a matrix?</code></pre>
-<pre><code>## [1] TRUE</code></pre>
-<pre class="r"><code>is.vector(A) # Is A a vector?</code></pre>
-<pre><code>## [1] FALSE</code></pre>
-<pre class="r"><code>is.matrix(x) # Is x a matrix?</code></pre>
-<pre><code>## [1] FALSE</code></pre>
-<pre class="r"><code>is.vector(x) # Is x a vector?</code></pre>
-<pre><code>## [1] TRUE</code></pre>
-<pre class="r"><code>is.numeric(x) # Is x a numeric?</code></pre>
-<pre><code>## [1] TRUE</code></pre>
-<pre class="r"><code>is.numeric(A) # Is A a numeric?</code></pre>
-<pre><code>## [1] TRUE</code></pre>
-<p>We can find items in the matrix, the same as we can with a vector. The difference is that we have to provide both a row and a column (in that order).</p>
-<pre class="r"><code>A[2, 3] # Give me the item in the 2nd row and 3rd column</code></pre>
-<pre><code>## [1] 8</code></pre>
-<pre class="r"><code>A[, 1] # Give me the items in the 1st column</code></pre>
-<pre><code>## [1] 5 7</code></pre>
-<pre class="r"><code>A[1, ] # Give me the items in the 1st row</code></pre>
-<pre><code>## [1]  5  9 -4</code></pre>
-</div>
-<div id="data-frames" class="section level1">
-<h1>Data Frames</h1>
-<p>Data Frames are similar to matricies: 2 dimensional. They will support different types of data, though.</p>
-<pre class="r"><code>ds &lt;- data.frame(x, y) # Create a data frame with x and y
-ds</code></pre>
-<pre><code>##    x  y
-## 1  5 20
-## 2  7 13
-## 3  9 17
-## 4 13 92
-## 5 -4  1
-## 6  8  4</code></pre>
-<p>We can do some basic things to see summary stats of a data frame.</p>
-<pre class="r"><code>dim(ds) # What are the dimensions of ds?</code></pre>
-<pre><code>## [1] 6 2</code></pre>
-<pre class="r"><code>str(ds) # What is the structure of ds?</code></pre>
-<pre><code>## &#39;data.frame&#39;:    6 obs. of  2 variables:
-##  $ x: num  5 7 9 13 -4 8
-##  $ y: num  20 13 17 92 1 4</code></pre>
-<pre class="r"><code>summary(ds) # What is the summary of ds?</code></pre>
-<pre><code>##        x                y        
-##  Min.   :-4.000   Min.   : 1.00  
-##  1st Qu.: 5.500   1st Qu.: 6.25  
-##  Median : 7.500   Median :15.00  
-##  Mean   : 6.333   Mean   :24.50  
-##  3rd Qu.: 8.750   3rd Qu.:19.25  
-##  Max.   :13.000   Max.   :92.00</code></pre>
-<p>Create a new data frame with a few different data types in it</p>
-<pre class="r"><code>new_df &lt;- data.frame(name = c(&quot;Jacob&quot;, &quot;Jingle&quot;, &quot;Heimer&quot;, &quot;Schmidt&quot;),
-                     age = c(14, 22, 100, 9),
-                     is_old = c(FALSE, FALSE, TRUE, FALSE))
-
-dim(new_df) # What are the dimensions of new_df?</code></pre>
-<pre><code>## [1] 4 3</code></pre>
-<pre class="r"><code>str(new_df) # What is the structure of new_df?</code></pre>
-<pre><code>## &#39;data.frame&#39;:    4 obs. of  3 variables:
-##  $ name  : chr  &quot;Jacob&quot; &quot;Jingle&quot; &quot;Heimer&quot; &quot;Schmidt&quot;
-##  $ age   : num  14 22 100 9
-##  $ is_old: logi  FALSE FALSE TRUE FALSE</code></pre>
-<pre class="r"><code>summary(new_df) # What is the summary of new_df?</code></pre>
-<pre><code>##      name                age           is_old       
-##  Length:4           Min.   :  9.00   Mode :logical  
-##  Class :character   1st Qu.: 12.75   FALSE:3        
-##  Mode  :character   Median : 18.00   TRUE :1        
-##                     Mean   : 36.25                  
-##                     3rd Qu.: 41.50                  
-##                     Max.   :100.00</code></pre>
-<p>There are also a few different ways we can find things in a data frame:</p>
-<pre class="r"><code>new_df[2, 3] # Can find items by row and column number</code></pre>
-<pre><code>## [1] FALSE</code></pre>
-<pre class="r"><code>new_df[, c(&quot;name&quot;, &quot;age&quot;)] # Can find items by column names</code></pre>
-<pre><code>##      name age
-## 1   Jacob  14
-## 2  Jingle  22
-## 3  Heimer 100
-## 4 Schmidt   9</code></pre>
-<pre class="r"><code>new_df[1, c(&quot;name&quot;, &quot;age&quot;)] # Can find items by column names and row number</code></pre>
-<pre><code>##    name age
-## 1 Jacob  14</code></pre>
-<pre class="r"><code>new_df[1, &quot;name&quot;] # Can find items by column names and row number</code></pre>
-<pre><code>## [1] &quot;Jacob&quot;</code></pre>
-<pre class="r"><code>new_df$is_old[2] # Can specify the column name behind the $ and then the row number</code></pre>
-<pre><code>## [1] FALSE</code></pre>
-<pre class="r"><code>new_df$is_old # Can specify the column name behind the $ without the row number</code></pre>
-<pre><code>## [1] FALSE FALSE  TRUE FALSE</code></pre>
-<p>Let’s create a (nonsensical) bigger data frame to see how head and tail work. We can use the rbind command (which just binds a data frame by rows, or basically stacks data frames on top of each other).</p>
-<pre class="r"><code>another_df &lt;- rbind(new_df, 
-                    new_df,
-                    new_df,
-                    new_df,
-                    new_df)
-head(another_df) # lets us see the first 6 rows (by default)</code></pre>
-<pre><code>##      name age is_old
-## 1   Jacob  14  FALSE
-## 2  Jingle  22  FALSE
-## 3  Heimer 100   TRUE
-## 4 Schmidt   9  FALSE
-## 5   Jacob  14  FALSE
-## 6  Jingle  22  FALSE</code></pre>
-<pre class="r"><code>?head
-head(another_df, n = 5) # lets us see the first 5 rows</code></pre>
-<pre><code>##      name age is_old
-## 1   Jacob  14  FALSE
-## 2  Jingle  22  FALSE
-## 3  Heimer 100   TRUE
-## 4 Schmidt   9  FALSE
-## 5   Jacob  14  FALSE</code></pre>
-<pre class="r"><code>tail(another_df) # lets us see the last 6 rows (by default)</code></pre>
-<pre><code>##       name age is_old
-## 15  Heimer 100   TRUE
-## 16 Schmidt   9  FALSE
-## 17   Jacob  14  FALSE
-## 18  Jingle  22  FALSE
-## 19  Heimer 100   TRUE
-## 20 Schmidt   9  FALSE</code></pre>
 </div>
 
 
