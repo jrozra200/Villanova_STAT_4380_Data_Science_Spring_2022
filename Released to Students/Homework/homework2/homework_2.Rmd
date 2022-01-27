@@ -1,0 +1,166 @@
+---
+title: "Data Science - Homework 2"
+author: "xxx"
+date: "xxx"
+output:
+  word_document: default
+---
+
+<!-- The setup option requires this chunk to be run before any others --> 
+<!-- The message = FALSE option suppresses the messages being printed --> 
+
+```{r setup, message = FALSE}
+library(tidyverse)
+```
+
+
+# Task 1) Add your name and the appropriate date in the header above.
+
+# Task 2) Enter the PollingReport.com data
+
+PollingReport.com conducted a poll in 1999 in which they asked both men and 
+women the following question: "All things considered, in our society today, do 
+you think there are more advantages in being a man, more advantages, in being a 
+woman, or are there no more advantages in being one than the other?" These 
+results are labeled as man, woman, or none, respectively, in the data below. 
+Those who did not know the answer to the question were labeled as "notknow".
+
+Of women, 57% said man, 6% said woman, 33% said none, and 4% said notknow.
+Of men, 41% said man, 14% said woman, 40% said none, and 5% said notknow.
+
+Create three variables, `men` which contains the four percentages listed above 
+for men, `women` containing the percentages for women, and `response` which is a 
+vector of character strings that state what response was given ("man", "woman", 
+"none", and "notknow"). For the percentages, you are welcome to use either 
+proportions or percentages, but do not include the "%" sign if you do the 
+latter.
+
+**For this task and all others, make sure to verify that data are read in **
+**properly before moving forward**
+
+
+```{r data_entry}
+
+```
+
+# Task 3) Explore the data and create new variables
+
+a) Verify that the percentages in both `men` and `women` sum to 1
+
+```{r}
+
+```
+
+Does each one Sum to 1?  Remove this line and answer the question.
+
+
+b) Create a logical vector called `men_more` of length 4, which is a function of 
+both `men` and `women`, which equals `TRUE` if percentage of men is higher than 
+the percentage of women and `FALSE` otherwise.
+
+```{r}
+
+```
+
+
+
+c) Combine all four of the variables you created into a data frame called 
+`advantage`. *(Hint: You could use either `cbind()` or `data.frame()`)*
+
+```{r}
+
+```
+
+
+
+d) Use `ifelse` (or `if_else`) to create a new variable called `who_more` that 
+equals "men" if men_more is `TRUE` and "women" if men_more if `FALSE.` 
+**This variable should be created directly within the `advantage` data frame.**
+
+```{r}
+
+```
+
+# Task 4) Add a new chunk below this question
+
+Explore the `gapminder` data to discover...
+
+Reminder, to reference a variable within the `gapminder` dataset, use 
+`gapminder$varname` where varname is the name of the variable you want to 
+explore.
+
+a) the earliest year (the variable is called `year`) in the dataset
+b) the latest year in the dataset
+c) the number of years between the latest and earliest (it's better to use the 
+functions here rather than just subtract the previous values)
+d) the average population size (`pop`)
+e) the average population size (`pop`) in 1000s (divide by 1000)
+f) the median GDP per capita (`gdpPercap`)
+g) whether there are any missing values in the dataset (any variable) 
+*[hint: use the any() command]*
+h) the `midhinge` [the average of the first and third quartile] of GDP per capita 
+*[hint: use the quantile() command]*
+
+
+
+
+
+
+# Task 5) Read data from external file
+
+Many cities are publicizing their data as part of an "Open Data" initiative. 
+Philadelphia's is located at [Open Data Philly](https://www.opendataphilly.org/). 
+Let's take a look at the cleanliness of neighborhoods around Philadelphia. 
+I downloaded a csv file on Child Blood Lead Levels in Philadelphia from 
+[here](https://www.opendataphilly.org/dataset/philadelphia-child-blood-lead-levels). 
+It can be found in the data section of the website. 
+The "metadata" (information about the variables) can be found 
+[here](http://metadata.phila.gov/#home/datasetdetails/594d26988d68a4593a61bcf0/).
+
+Read the data file into R. Run a `str()` command to make sure it was read in 
+properly. Verify that there are 46 observations and 5 variables.
+
+
+```{r}
+
+```
+
+
+
+
+# Task 6) Explore the Lead Level data
+
+a) Verify the following. Unless otherwise stated, feel free to use whatever 
+functions you wish.
+
+i) There are 10 values missing for `num_bll_5plus` and for `perc_5plus`.
+ii) These 10 missing values (see above) are the ones that have `data_redacted` 
+equal to `TRUE.`
+
+
+```{r}
+
+```
+
+
+
+b) Which zip code has the highest percent of kids with a high lead level? Which 
+zip code has the lowest? Use the `perc_5plus` variable to determine these.
+
+
+```{r}
+
+```
+
+
+
+
+c) Use the `hist()` function to show the distribution of `perc_5plus`. Comment 
+on what you see.
+
+
+```{r}
+
+```
+
+
