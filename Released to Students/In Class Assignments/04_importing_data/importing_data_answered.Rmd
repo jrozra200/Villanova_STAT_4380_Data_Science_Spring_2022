@@ -1,0 +1,52 @@
+---
+title: "Intro R - Importing Data"
+output:
+  pdf_document: default
+  word_document: default
+  html_document:
+    df_print: paged
+---
+
+Step 1: Load the `tidyverse` package.
+
+```{r setup, include = FALSE}
+library(tidyverse)
+library(readxl)
+```
+
+Step2: Download the file `titanic.csv` from the datasets directory on Google 
+Drive. Read it into R using `read_csv()` from the readr package. Explore the 
+data to make sure it was read in properly.
+
+```{r read_csv}
+titanic <- read_csv("../../datasets/titanic.csv")
+str(titanic)
+head(titanic)
+summary(titanic)
+table(titanic$Sex)
+table(titanic$Survived)
+```
+
+
+Step 3: Compare the file when you read it in using `read.csv()` (base `R`) 
+versus `read_csv()` (`readr`). After exploring, what do you see different? 
+
+```{r read.csv}
+titanic_other <- read.csv("../../datasets/titanic.csv")
+head(titanic_other)
+```
+
+Step 4: Download the file `manufacturing.xlsx` from the datasets directory on 
+Google Drive.  Read it into R using `read_xlsx()` from the `readxl` package. 
+Explore the data to make sure it was read in properly.
+
+```{r readxl}
+manufacturing <- read_xlsx("../../datasets/manufacturing.xlsx",
+                           sheet = 2)
+head(manufacturing)
+manufacturing
+summary(manufacturing)
+table(manufacturing$Product)
+table(manufacturing$Shift)
+```
+

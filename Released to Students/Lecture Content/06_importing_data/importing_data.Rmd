@@ -1,0 +1,127 @@
+---
+title: "Importing Data"
+author: "Jake Rozran"
+date: "`r Sys.Date()`"
+output: 
+    html_document:
+        toc: true
+        toc_float:
+            smooth_scrolling: true
+---
+
+## Read it in as a vector using `c()`.
+
+```{r vector}
+height <- c(59, 62, 55, 68)
+height
+```
+
+## Read it in as a `data.frame()`.
+
+```{r dataframe}
+mydf <- data.frame(id = 1:3,
+                   group = c("a", "b", "c"),
+                   names = c("Marielle", "Pablo", "Wyatt"))
+mydf
+```
+
+## Using built in [to `R`] datasets.
+
+```{r built_in}
+# BUILT INTO R
+data("USArrests")
+str(USArrests)
+
+# ACCESSED VIA PACKAGE
+library(gapminder)
+data("gapminder")
+str(gapminder)
+```
+
+## Using external datasets
+
+But... most usefully will be accessing external datasets. There are many formats 
+of data - here are some common types and how to access them.
+
+| Source Data | Base R Command | Tidyverse Package | 
+| ----------- | -------------- | ----------------- | 
+| CSV | `read.csv()` | `readr` | 
+| Other delimitted text formats | `read.table()` | `readr` |
+| Excel | | `readxl` |
+| JSON | | `jsonlite` | 
+| XML | | `xml2` |
+| Web API | | `httr` |
+| Scraping web pages | | `rvest` |
+
+There are many many others, too, but we'll be using these (maybe).
+
+### The `readr` Package
+
+Though there are fully capable base R functions for the CSV data, we'll use 
+the `readr` package in this class.
+
+- It is faster (~10x faster)
+- It returns `tibble`s
+- More intuitive defaults
+- Includes arguments for handing missing data [i.e. making `.` into a `NA`]
+
+Functions in `readr`:
+
+- `read_csv()` - comma separated files
+- `read_csv2()` - semi-colon separated files
+- `read_delim()` - generally delimited files (like a `|`)
+- `read_fwf()` - fixed width files
+- `read_log()` - application log files
+- `read_table()` - space separated files
+- `read_tsv()` - tab separated files
+
+## Writing Data from R
+
+Very often, you'll update a dataset or create a dataset and want to save it. 
+
+In Base `R`, this is `write.csv()` or `write.table()`. 
+
+In `readr`, this is `write_csv()` or `write_table()`.
+
+### Our First Excel and CSVs File Reads
+
+1. Download the `default_of_credit_card_clients.xlsx` dataset from the `dataset` 
+folder on 
+[Google drive](https://drive.google.com/drive/u/2/folders/1VmGLho1xioty-G7IaXCF2x_yKy-LPxC3). 
+    - I recommend moving it into the same folder as your `Rmd` script.
+2. Load the `readxl` package
+    - It should be installed with the `tidyverse` package, but if not, use 
+    `install.packages()` to install it.
+3. Read in the file using the `read_xlsx()` function.
+    - Assign the data to a variable called `credit`.
+    - Verify that the data is there by using a `head()`, `str()`, and 
+    `summary()`.
+4. Using the `write_csv()` function, create a `.csv` version of your file with 
+the same name in the same directory as the `.xlsx`.
+    - Don't forget to load the `readr` package.
+5. Read in the file using the `read_csv()` function.
+    - Assign the data to a variable called `credit_csv`.
+    - Verify that the data is there by using a `head()`, `str()`, and 
+    `summary()`.
+
+```{r in_class_together}
+library(readxl)
+
+credit <- read_xlsx("../../../Released to Students/datasets/default_of_credit_card_clients.xlsx")
+head(credit)
+str(credit)
+summary(credit)
+
+library(readr)
+
+write_csv(credit, "../../../Released to Students/datasets/default_of_credit_card_clients.csv")
+
+credit_csv <- read_csv("../../../Released to Students/datasets/default_of_credit_card_clients.csv")
+head(credit_csv)
+str(credit_csv)
+summary(credit_csv)
+```
+
+## In Class Exercise
+
+Let's do the in class exercise!
