@@ -1,0 +1,174 @@
+---
+title: "Working with Data - Part II"
+author: "Jake Rozran"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+# Matricies
+
+A matrix is basically a 2 dimensional vector (all a single type of variable)
+
+```{r create_matrix}
+x <- c(5, 7, 9, 13, -4, 8) # Our vector from last lecture
+
+A <- matrix(x, 2, 3) # Creates a matrix from x
+A 
+```
+
+You can also see that a matrix is also a vector.
+
+```{r checkout_the_matrix}
+is.matrix(A) # Is A a matrix?
+is.vector(A) # Is A a vector?
+is.matrix(x) # Is x a matrix?
+is.vector(x) # Is x a vector?
+is.numeric(x) # Is x a numeric?
+is.numeric(A) # Is A a numeric?
+```
+
+We can find items in the matrix, the same as we can with a vector. The 
+difference is that we have to provide both a row and a column (in that order).
+
+```{r find_matrix_items}
+A[2, 3] # Give me the item in the 2nd row and 3rd column
+A[, 1] # Give me the items in the 1st column
+A[1, ] # Give me the items in the 1st row
+```
+
+# Data Frames
+
+Data Frames are similar to matricies: 2 dimensional. They will 
+support different types of data, though. 
+
+```{r df}
+y <- c(20, 13, 17, 92, 1, 4) # Our other vector from last class
+
+ds <- data.frame(x, y) # Create a data frame with x and y
+ds
+```
+
+We can do some basic things to see summary stats of a data frame.
+
+```{r df_functions}
+dim(ds) # What are the dimensions of ds?
+str(ds) # What is the structure of ds?
+summary(ds) # What is the summary of ds?
+```
+
+Create a new data frame with a few different data types in it
+
+```{r diff_df}
+new_df <- data.frame(name = c("Jacob", "Jingle", "Heimer", "Schmidt"),
+                     age = c(14, 22, 100, 9),
+                     is_old = c(FALSE, FALSE, TRUE, FALSE))
+
+dim(new_df) # What are the dimensions of new_df?
+str(new_df) # What is the structure of new_df?
+summary(new_df) # What is the summary of new_df?
+```
+
+There are also a few different ways we can find things in a data frame:
+
+```{r find_df}
+new_df[2, 3] # Can find items by row and column number
+new_df[, c("name", "age")] # Can find items by column names
+new_df[1, c("name", "age")] # Can find items by column names and row number
+new_df[1, "name"] # Can find items by column names and row number
+new_df$is_old[2] # Can specify the column name behind the $ and then the row number
+new_df$is_old # Can specify the column name behind the $ without the row number
+```
+
+Let's create a (nonsensical) bigger data frame to see how head and tail work. 
+We can use the rbind command (which just binds a data frame by rows, or 
+basically stacks data frames on top of each other).
+
+```{r head_tail}
+another_df <- rbind(new_df, 
+                    new_df,
+                    new_df,
+                    new_df,
+                    new_df)
+head(another_df) # lets us see the first 6 rows (by default)
+?head
+head(another_df, n = 5) # lets us see the first 5 rows
+tail(another_df) # lets us see the last 6 rows (by default)
+```
+
+
+# Testing & Changing Object Types
+
+- `is.` is a prefect function that creates a logical result if the type matches.
+    - `any()` tests all of an object.
+- `as.` is a prefix function that changes the type of an object (temporarily).
+
+```{r testing}
+is.na(c(1, 2, 3, NA))
+
+any(is.na(c(1, 2, 3, NA)))
+
+gender <- c("male", "female", "male", "female")
+is.factor(gender)
+is.character(gender)
+
+summary(as.factor(c(1,2,2,1,3,1,1,2)))
+```
+
+# If Then Statements
+
+There are two types of if statements in `R`.
+
+## `if`, `else if`, `else`
+
+I use these types of if statements to direct the program in a direction. `R` 
+calls it a "control-flow statement". IRL, I have an if statement to make one 
+type of variable if the data is monthly and another type of variable if the 
+data is daily and another type if the data is weekly.
+
+```{r if_statement}
+type <- "monthly"
+
+if (type == "monthly") {
+    variable <- "this is monthly data so I do a monthly calculation"
+} else if (type == "weekly") {
+    variable <- paste0("this is weekly data so I do a weekly calculation (whi",
+                       "ch may be totally different then monthly)")
+} else {
+    variable <- "this must be daily data (since that is the only other option)"
+}
+
+print(variable)
+# Change the type and see how the output changes
+```
+
+## `ifelse` or `if_else`
+
+`ifelse` and the tidyverse version `if_else` (you must first load the package 
+`tidyverse` to use it) are used to evaluate an entire vector, item by item, and 
+do something. I use these functions when I need to make a calculation based on 
+a vector. 
+
+For example, how many females are there in our data from before? 
+
+```{r ifelse}
+sum(ifelse(gender == "female", 1, 0))
+
+# LETS LOOK UNDER THE HOOD
+ifelse(gender == "female", 1, 0)
+```
+
+We can do the same, again, with the `tidyverse` version.
+
+```{r if_else}
+library(tidyverse)
+
+sum(if_else(gender == "female", 1, 0))
+
+# LETS LOOK UNDER THE HOOD
+if_else(gender == "female", 1, 0)
+
+```
+
+# IN CLASS ASSIGNMENT 
+
+Pause here for the in-class assignment
