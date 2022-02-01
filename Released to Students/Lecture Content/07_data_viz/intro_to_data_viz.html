@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Introduction to Data Visualization</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Jake Rozran" />
+    <meta name="date" content="2022-02-01" />
+    <script src="intro_to_data_viz_files/header-attrs/header-attrs.js"></script>
+    <script src="intro_to_data_viz_files/kePrint/kePrint.js"></script>
+    <link href="intro_to_data_viz_files/lightable/lightable.css" rel="stylesheet" />
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Introduction to Data Visualization
+## STAT 4380 - 001
+### Jake Rozran
+### Villanova University
+### 2022-02-01
+
+---
+
+
+
+
+
+
+
+
+class: inverse, center, middle
+
+# The 2012 Federal Election Cycle
+
+#To Begin, a Case Study!
+
+We are going to use an example from the book to show how important choices in
+data visualization effect our understanding of what is happening.    
+
+*Ethics Note: When done intentionally, this is how one may "lie with statistics."*
+
+---
+
+class: left, middle
+
+# The Federal Election Commission (FEC) Maintains a Website of All Contributions
+
+On this website there are: 
+1. All contributions of $200 or more made by individuals to candidates and 
+committees.
+2. Spending by committees on behalf (and against) candidates.
+3. In fact, this data is available in `R` in the `fec12` library!
+
+---
+
+class: center, middle
+
+# If you had this Data and Were Tasked with an Analysis, What Questions Might you Ask?
+
+---
+
+class: center, middle
+
+# A Good Place to Start: "On whose candidacy was the most money spent?"
+
+---
+
+class: top, left
+
+### What Conclusions do you Draw From the Data?
+
+&lt;img src="intro_to_data_viz_files/figure-html/basic_spending-1.png" width="100%" /&gt;
+
+---
+
+class: top, left
+
+### Fun (and Obvious Fact): Committees are not Limited to Spending Money in Support of a Candidate
+
+They Can also Spend Money **against** a candidate. Now what conclusions do you 
+draw? This is the same exact data as before, with more information provided.
+
+&lt;img src="intro_to_data_viz_files/figure-html/for_against-1.png" width="100%" /&gt;
+
+---
+
+class: top, left
+
+### Another Question to Explore: Was Mitt Supported by a Few Rich Donors While Barack Supported "by the People"?
+
+- If we look at the whole election, what conclusion would you draw? 
+- What else might we ask of this data?
+
+&lt;img src="intro_to_data_viz_files/figure-html/spending_hist-1.png" width="100%" /&gt;
+
+---
+
+class: top, left
+
+### Diving Deeper: Let's Change the Data and Again Answer the Same Question
+
+Was Mitt Supported by a Few Rich Donors While Barack Supported "by the People"?
+
+&lt;img src="intro_to_data_viz_files/figure-html/split_donations-1.png" width="100%" /&gt;
+
+---
+
+class: inverse, middle, center
+
+# Composing Data Graphics
+
+Anyone can create a data visualization - the hard part is making it tell the 
+correct story in the easiest to understand way. 
+
+
+
+--
+
+.pull-left[
+&lt;img src="intro_to_data_viz_files/figure-html/bad_graph-1.png" width="100%" /&gt;
+]
+
+--
+
+.pull-right[
+&lt;img src="intro_to_data_viz_files/figure-html/better_graph-1.png" width="100%" /&gt;
+]
+
+---
+
+class: middle, center
+
+# To the Point of the Last Slide, it has Taken me Hours to the Previous Slides Just how I Want Them
+
+It is _easy_ to slap something together. It is **HARD** to put something clean, 
+clear, and meaningful together.
+
+---
+
+class: top, left
+
+# A taxonomy for data graphics
+
+Taxonomy, smaxonomy. That's just a fancy name for saying you got to know the 
+finer parts of a data viz before you, too, can make fine data viz. 
+
+.pull-left[
+Data graphics can be understood in terms of four basic elements: 
+
+1. Visual cues
+2. Coordinate systems
+3. Scale
+4. Context
+]
+
+.pull-right[
+*And two bonus items:* 
+
+1. Facets
+2. Layers
+]
+
+---
+
+class: top, left
+
+# Visual Cues
+
+- Visual cues are graphical elements that draw the eye to what we want our 
+audience to focus upon
+- These are the building blocks of data viz
+- Human beings' ability to perceive difference in magnitude accurately decends 
+in this order
+    - For example, humans are not as good at perceiving angles as we are length, 
+    hence why the example before with the pie chart was so difficult
+    - Also, humans are poor at perceiving differences in color, that is why 
+    being thoughtful about color is so important (and why heatmaps are 
+    frequently poopooed)
+
+---
+
+class: top, left
+
+# Visual Cues (Continued)
+
+&lt;table class="table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;"&gt;
+&lt;caption&gt;Visual cues and what they signify.&lt;/caption&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Visual Cue &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Variable Type &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Question &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Position &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; numerical &lt;/td&gt;
+   &lt;td style="text-align:left;width: 24em; "&gt; where in relation to other things? &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Length &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; numerical &lt;/td&gt;
+   &lt;td style="text-align:left;width: 24em; "&gt; how big (in one dimension)? &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Angle &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; numerical &lt;/td&gt;
+   &lt;td style="text-align:left;width: 24em; "&gt; how wide? parallel to something else? &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Direction &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; numerical &lt;/td&gt;
+   &lt;td style="text-align:left;width: 24em; "&gt; at what slope? in a time series, going up or down? &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Shape &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; categorical &lt;/td&gt;
+   &lt;td style="text-align:left;width: 24em; "&gt; belonging to which group? &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Area &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; numerical &lt;/td&gt;
+   &lt;td style="text-align:left;width: 24em; "&gt; how big (in two dimensions)? &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Volume &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; numerical &lt;/td&gt;
+   &lt;td style="text-align:left;width: 24em; "&gt; how big (in three dimensions)? &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Shade &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; either &lt;/td&gt;
+   &lt;td style="text-align:left;width: 24em; "&gt; to what extent? how severely? &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Color &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; either &lt;/td&gt;
+   &lt;td style="text-align:left;width: 24em; "&gt; to what extent? how severely? &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+
+class: top, left
+
+### Position, Length, &amp; Area Example
+
+Because I feel like this is getting a little too much me talking at you, let us
+do an example together. 
+
+Someone tell me what they see in this plot, especially as it relates to 
+**position, length, and area**?
+
+.pull-left[
+
+```r
+plot_dat &lt;- iris %&gt;%
+    group_by(Species) %&gt;% 
+    summarise(avg_sepal_length = mean(Sepal.Length))
+
+ggplot(plot_dat, aes(x = Species, y = avg_sepal_length)) + 
+    geom_bar(stat = "identity")
+```
+]
+
+--
+
+.pull-right[
+&lt;img src="intro_to_data_viz_files/figure-html/unnamed-chunk-1-1.png" width="100%" /&gt;
+]
+
+---
+
+class: top, left
+
+### Direction
+
+What **direction** do we see in this plot? Anything else?
+
+.pull-left[
+
+```r
+ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width)) + 
+    geom_point()
+```
+]
+
+--
+
+.pull-right[
+&lt;img src="intro_to_data_viz_files/figure-html/unnamed-chunk-2-1.png" width="100%" /&gt;
+]
+
+---
+
+class: top, left
+
+### Angle, Color, Shape
+
+Talk to me about the **angle, color, and shape**.
+
+.pull-left[
+
+```r
+ggplot(iris, aes(x = Sepal.Length, 
+                 y = Sepal.Width, 
+                 color = Species, 
+                 shape = Species)) + 
+    geom_point() + 
+    geom_smooth(method = "lm", se = FALSE)
+```
+]
+
+--
+
+.pull-right[
+&lt;img src="intro_to_data_viz_files/figure-html/unnamed-chunk-3-1.png" width="100%" /&gt;
+]
+
+---
+
+### *Angle, Color, Shape* and Size
+
+We've just added another dimension: **size**. What do we realize now?
+
+.pull-left[
+
+```r
+ggplot(iris, aes(x = Sepal.Length, 
+                 y = Sepal.Width, 
+                 color = Species, 
+                 shape = Species,
+                 size = Petal.Length)) + 
+    geom_point() + 
+    geom_smooth(method = "lm", se = FALSE)
+```
+]
+
+--
+
+.pull-right[
+&lt;img src="intro_to_data_viz_files/figure-html/unnamed-chunk-4-1.png" width="100%" /&gt;
+]
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
