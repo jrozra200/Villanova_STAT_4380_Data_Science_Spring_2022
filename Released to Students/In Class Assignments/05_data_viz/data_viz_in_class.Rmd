@@ -1,0 +1,76 @@
+---
+title: "Data Visualization - Part 1"
+output:
+word_document: default
+---
+
+```{r setup}
+library(tidyverse)
+```
+
+Let's take a look at the MPG dataset.This dataset contains a subset of the 
+fuel economy data that the EPA makes available on http://fueleconomy.gov. It 
+contains only models which had a new release every year between 1999 and 2008 - 
+this was used as a proxy for the popularity of the car.
+
+Explore the data to see what's in there...
+
+```{r explore}
+data("mpg")
+
+head(mpg)
+str(mpg)
+summary(mpg)
+```
+
+Run the code to make a graph
+
+```{r run_this_graph}
+ggplot(data = mpg, aes(x = displ, y = hwy)) +
+    geom_point()
+```
+
+Add `color`, `size`, `alpha`, and `shape` aesthetics to your graph. Experiment.
+
+```{r add_some_cool_stuff}
+ggplot(data = mpg, aes(x = displ, y = hwy)) +
+    geom_point()
+```
+
+Replace this scatterplot with one that draws boxplots. Use the cheatsheet. 
+Try your best guess.
+
+```{r}
+ggplot(mpg, aes(x = class, y = hwy)) + 
+    geom_point()
+```
+
+Make the histogram of the `hwy` variable.Hint: Do not supply a `y` variable.
+
+```{r}
+
+```
+
+Make a density plot of `hwy` colored by `class`. Use the cheatsheet and/or try 
+your best guess.
+
+```{r}
+
+```
+
+Make the bar chart of `class`.
+
+```{r}
+
+```
+
+Predict what this code will do. Then run it.
+
+```{r}
+ggplot(mpg, aes(x = displ, y = hwy)) + 
+    geom_point() +
+    geom_smooth()
+```
+
+
+

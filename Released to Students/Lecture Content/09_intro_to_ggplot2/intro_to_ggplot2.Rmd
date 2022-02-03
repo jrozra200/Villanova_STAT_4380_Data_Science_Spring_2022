@@ -1,0 +1,151 @@
+---
+title: "Intro to `ggplot2`"
+author: "Jake Rozran"
+date: "`r Sys.Date()`"
+output: 
+    html_document:
+        toc: true
+        toc_float:
+            smooth_scrolling: true
+            collapse: false
+---
+
+```{r setup, include = FALSE}
+library(mdsr)
+library(tidyverse)
+
+options(scipen = 999)
+```
+
+# The Data We'll Use for Class Today
+
+```{r data_intro}
+data("CIACountries") # GIMME THE DATA
+
+?CIACountries # WHAT IS THIS DATA?
+
+head(CIACountries) # SHOW ME THE DATA
+str(CIACountries) # SHOW ME THE DATA DIFFERENTLY
+summary(CIACountries) # SUMMARIZE THE DATA FOR ME
+
+unique(CIACountries$country) # WHAT COUNTRIES ARE HERE?
+```
+
+# The `ggplot` object
+
+- `ggplot2` is a library to build data graphics
+- The reason that `ggplot2` has been so successful is that it allows you to build 
+graphics incrementally
+- The first thing we do is create a `ggplot` object
+- There are two methods for doing this (I prefer the second, as it makes it 
+clearer at a glance what all the aesthetics and layers are)
+
+```{r intro}
+# Book Method - Assign a variable the ggplot object
+# Then use that variable to build upon
+g <- ggplot(data = CIACountries, aes(x = educ, y = gdp))
+g + geom_point()
+
+# I prefer to keep the object unassigned so I can see all the parts
+# This becomes especially useful as you build your graphics over huge scripts
+ggplot(data = CIACountries, aes(x = educ, y = gdp)) +
+    geom_point()
+```
+
+## What are we Looking at Here?
+
+1. The `ggplot` object
+    - This informs which data to use - in this case `CIACountries` and then 
+    which aethestics to use with the `aes()` function
+    - Here, we are telling `ggplot` to use the `educ` column for the `x` 
+    position and `gdp` for the `y` position
+2. The `geom_point()` layer
+    - This is the "glyph" we want to plot
+    - Each point is a different country, located at its `educ` and `gdp`
+    - *Note:* the size for each point is the same, so it is not an aesthetic 
+    (it does not map to a visual cue)
+    
+## Adding More Visual Cues
+
+- You can add additional aesthetics beyond `x` and `y`.
+- You can add them in the `ggplot` object (if they will be used universally) OR
+- You can add them in the layer object
+
+```{r getting_more}
+ggplot(data = CIACountries, aes(x = educ, y = gdp)) +
+    geom_point(aes(color = net_users))
+```
+
+### To Change an Aestetic or Not, That is the Question
+
+You can also customize a layer universally (not based on a variable in the data)
+
+In the code below, we change the size of the dot to be bigger for all dots 
+(still not a visual cue, but does make the plot easier to read).
+
+```{r non_aes_change}
+ggplot(data = CIACountries, aes(x = educ, y = gdp)) +
+    geom_point(aes(color = net_users), size = 3)
+```
+
+We can, however, also make size an aesthetic (and add even more information to 
+the plot)!
+
+*Note: There is a such a thing as too much information in a plot... be careful *
+*not to add too many aesthetics.*
+
+```{r aes_change}
+ggplot(data = CIACountries, aes(x = educ, y = gdp)) +
+    geom_point(aes(color = net_users, size = roadways))
+```
+
+### Let's get Wild - there is a World of Things to Change
+
+- All of these "features" can be assigned via `aes()` or not (which makes them 
+universal changes)
+- `alpha` is the one that may seem less intuitive, it is the opacity (between 0 
+and 1)
+- `color` (or `colour`, if you prefer) is the color of lines
+- `fill` is the color filling an object (like a bar or the squares below)
+- There are a bunch of shapes built in 
+([I googled it and there is a list](https://www.datanovia.com/en/blog/ggplot-point-shapes-best-tips/))
+
+```{r all_the_options}
+ggplot(data = CIACountries, aes(x = educ, y = gdp)) +
+    geom_point(size = 3, 
+               color = "purple", 
+               alpha = 0.5, 
+               shape = 22, 
+               fill = "pink")
+```
+
+### Going Beyond Points
+
+- Obviously there are more than just scatter plots in this world
+- You can build any plot you can imagine with `ggplot2` (I may not have a great 
+imagination)
+- Check out the `ggplot2` cheat sheet on the 
+[RStudio Website](https://www.rstudio.com/resources/cheatsheets/) or our 
+[Google Drive](https://drive.google.com/drive/u/2/folders/1UDfF9IGHay82mZo97NBvgkKoEjSIfP39)
+
+```{r add_text}
+ggplot(data = CIACountries, aes(x = educ, y = gdp)) +
+    geom_text(aes(label = country, color = net_users))
+```
+
+### The Beat and the Chorus at the SAME TIME!
+
+We're not really ready for this yet, but we can add multiple layers, too!
+
+```{r text_and_points}
+ggplot(data = CIACountries, aes(x = educ, y = gdp, color = net_users)) +
+    geom_point() +
+    geom_text(aes(label = country), 
+              nudge_x = 0.15, 
+              check_overlap = TRUE, 
+              hjust = 0)
+```
+
+# IN CLASS EXERCISE!
+
+
