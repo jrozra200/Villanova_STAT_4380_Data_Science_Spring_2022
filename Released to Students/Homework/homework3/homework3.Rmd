@@ -1,0 +1,168 @@
+---
+title: "Data Science - Homework #3"
+author: "your name"
+output:
+ word_document: default
+---
+
+
+
+<!-- 
+- Change your name above and save the file. You should get in the habit of 
+doing this for future assignments.
+- Recall that the setup option always runs this section once before others.
+- I included the necessary libraries in the setup chunk below. If you use install.packages, make sure to comment it out after you execute it once. Better 
+yet, go ahead and delete it. I know that if your library ran, you must have 
+installed the package.
+- I added `message = FALSE` and `warning = FALSE` as well. These stifle printing 
+messages and warnings, respectively, to the Knitted file. Feel free to 
+experiment with those and other chunk commands, if you want.
+- You should delete unnecessary text, but please leave the problem headers for 
+each problem (the ones in **bold**)
+
+- AFTER EACH GRAPH YOU CREATE, MAKE SURE TO COMMENT ON WHAT YOU SEE
+- PLEASE ADD APPROPRIATE LABELS TO EACH GRAPH
+--> 
+
+
+```{r setup, message=F, warning=F}
+library(tidyverse)
+library(mosaicData) # For problem 2
+library(babynames) # For problem 3
+library(mdsr) # For problem 4
+```
+
+## Problem 1) Arrests Per State in the US
+
+The `USArrests` dataset contains one observation per US State. The variables are 
+the murder, assault, and rape rates per 100,000 people as well as the percent of 
+the population living in urban areas.
+
+**Problem 1a) Create a graph of murder rate. **
+
+```{r}
+
+```
+
+Comment on what you see (feel free to erase this line)
+
+
+
+**Problem 1b) Create a graph of assault rate. **
+
+```{r}
+
+```
+
+Comment on what you see (feel free to erase this line)
+
+
+
+
+**Problem 1c) Create a scatterplot of murder rate (`x`) vs. assault rate (`y`). **
+
+```{r}
+
+```
+
+Comment on what you see (feel free to erase this line)
+
+
+**Problem 1d) Add a `geom_smooth` to the previous plot. **
+
+
+```{r}
+
+```
+
+
+Comment on what you see (feel free to erase this line)
+
+
+**Problem 1e) Add another `geom_smooth` with a `method = "lm"` argument to the **
+**previous plot. (You might want to make it a different color to distinguish it **
+**from the previous one.) **
+
+```{r}
+
+```
+
+Comment on whether the linear model is appropriate for these data (feel free to 
+erase this line)
+
+
+
+
+**Problem 1d) Add `UrbanPop` as a color aesthetic to the scatterplot you created **
+**in 1c) above. **
+
+
+```{r}
+
+```
+
+
+Comment on what you see (feel free to erase this line)
+
+
+
+
+
+
+## Problem 2) Galton Height Data
+
+The Galton data can be found in the `mosaicData` package. The data contains 
+`height` information on all children within a `family`, including the 
+child's `sex` (gender), the `mother`'s height, the `father`'s height, and 
+the number of kids (`nkids`) in the family. Height is measured in inches.
+
+
+**Problem 2a) Create a scatterplot of each person's height against their **
+**Father's height. (As typically done, please put the independent variable on **
+**the x-axis)**
+
+```{r}
+
+
+```
+
+Comment on what you see (feel free to erase this line)
+
+
+**Problem 2b) Add a regression line to the previous plot by using** 
+**`geom_smooth(method = "lm")`. **
+
+```{r}
+
+
+```
+
+Comment on what you see (feel free to erase this line)
+
+
+**Problem 2c) Add a y = x line to the previous plot using ** 
+**`geom_abline(intercept = 0,slope = 1)` **
+
+```{r}
+
+
+```
+
+Comment on what you see (feel free to erase this line)
+
+
+
+**Problem 2d) Add `sex` as an aesthethic to the previous plot. Make sure you **
+**have two separate regression lines, one per each `sex`. **
+
+
+```{r}
+
+
+```
+
+Comment on what you see (feel free to erase this line)
+
+
+
+
