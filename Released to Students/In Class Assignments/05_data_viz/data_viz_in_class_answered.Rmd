@@ -21,6 +21,8 @@ data("mpg")
 head(mpg)
 str(mpg)
 summary(mpg)
+table(mpg$manufacturer)
+
 ```
 
 Run the code to make a graph
@@ -34,7 +36,16 @@ Add `color`, `size`, `alpha`, and `shape` aesthetics to your graph. Experiment.
 
 ```{r add_some_cool_stuff}
 ggplot(data = mpg, aes(x = displ, y = hwy)) +
-    geom_point()
+    geom_point(aes(size = cyl,
+                   color = manufacturer,
+                   alpha = cty,
+                   shape = class))
+
+ggplot(data = mpg, aes(x = displ, y = hwy)) +
+    geom_point(size = 3,
+               color = "blue",
+               alpha = 0.5,
+               shape = 11)
 ```
 
 Replace this scatterplot with one that draws boxplots. Use the cheatsheet. 
@@ -42,26 +53,29 @@ Try your best guess.
 
 ```{r}
 ggplot(mpg, aes(x = class, y = hwy)) + 
-    geom_point()
+    geom_boxplot()
 ```
 
 Make the histogram of the `hwy` variable.Hint: Do not supply a `y` variable.
 
 ```{r}
-
+ggplot(mpg, aes(x = hwy)) +
+    geom_histogram(binwidth = 5)
 ```
 
 Make a density plot of `hwy` colored by `class`. Use the cheatsheet and/or try 
 your best guess.
 
 ```{r}
-
+ggplot(mpg, aes(x = hwy, color = class)) +
+    geom_density()
 ```
 
 Make the bar chart of `class`.
 
 ```{r}
-
+ggplot(mpg, aes(x = class)) +
+    geom_bar()
 ```
 
 Predict what this code will do. Then run it.
