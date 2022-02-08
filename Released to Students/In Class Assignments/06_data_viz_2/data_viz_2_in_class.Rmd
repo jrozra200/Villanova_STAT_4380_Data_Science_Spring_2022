@@ -1,0 +1,74 @@
+---
+title: "Data Visualization - Part 2"
+output: html_document
+---
+
+```{r setup}
+library(tidyverse)
+```
+
+Let's take a look at the MPG dataset again. This dataset contains a subset of the 
+fuel economy data that the EPA makes available on http://fueleconomy.gov. It 
+contains only models which had a new release every year between 1999 and 2008 - 
+this was used as a proxy for the popularity of the car.
+
+Explore the data to see what's in there...
+
+```{r explore}
+data("mpg")
+
+head(mpg)
+str(mpg)
+summary(mpg)
+```
+
+Run the code to make a graph
+
+```{r run_this_graph}
+ggplot(data = mpg, aes(x = displ, y = hwy)) +
+    geom_point()
+```
+
+Change the `x` and `y` axes to be logarithmic (both independently and then at 
+the same time). Which seems to best fit the data?
+
+```{r change_the_axes}
+ggplot(data = mpg, aes(x = displ, y = hwy)) +
+    geom_point()
+```
+
+If you used `scale_y_continuous` in the last part, change it to `coord_trans` 
+for each example (if you did `coord_trans`, use the appropriate `scale_` this 
+time). Which do you prefer?
+
+```{r}
+ggplot(mpg, aes(x = class, y = hwy)) + 
+    geom_point()
+```
+
+Change the color of the points to be be controlled by `drv`.
+
+```{r}
+
+```
+
+Move the legend from the last plot to the top of your graph.
+
+```{r}
+
+```
+
+Instead of color, can you create a facet by `drv`?
+
+```{r}
+
+```
+
+From the last plot, add in an appropriate title, `x` label, and `y` label.
+
+```{r}
+
+```
+
+
+

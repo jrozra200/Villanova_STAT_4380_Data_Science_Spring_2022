@@ -1,0 +1,78 @@
+---
+title: "More `ggplot2`"
+author: "Jake Rozran"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include = FALSE}
+library(mdsr)
+library(tidyverse)
+
+options(scipen = 999)
+
+# THE DATA WE'LL CONTINUE TO USE
+data("CIACountries") # GIMME THE DATA
+```
+
+# Moving on From Aesthetics - Let's Discuss Scale
+
+Harken back to last class. We had this plot:
+
+```{r harken}
+ggplot(data = CIACountries, aes(x = educ, y = gdp)) +
+    geom_point(aes(color = net_users, size = roadways))
+```
+
+At the bottom of the plot, we have a hard time discerning differences in GDP. 
+There are lots of points stacked on top or near one another.
+
+One option we have is to adjust the scale. 
+
+As with many things in `R`, there is more than one way to accomplish this.
+
+## `coord_trans`
+
+```{r log_y_coord_trans}
+ggplot(data = CIACountries, aes(x = educ, y = gdp)) +
+    geom_point(aes(color = net_users, size = roadways)) +
+    coord_trans(y = "log10")
+```
+
+## `scale_y_continuous`
+
+```{r log_y_scale_y}
+ggplot(data = CIACountries, aes(x = educ, y = gdp)) +
+    geom_point(aes(color = net_users, size = roadways)) +
+    scale_y_continuous(trans = "log10")
+```
+
+## Side-by-Side
+
+```{r side_by_side}
+ct <- ggplot(data = CIACountries, aes(x = educ, y = gdp)) +
+    geom_point(aes(color = net_users, size = roadways)) +
+    coord_trans(y = "log10") + 
+    theme(legend.position = "none")
+
+syc <- ggplot(data = CIACountries, aes(x = educ, y = gdp)) +
+    geom_point(aes(color = net_users, size = roadways)) +
+    scale_y_continuous(trans = "log10") + 
+    theme(legend.position = "none")
+
+gridExtra::grid.arrange(ct, syc, nrow = 1)
+
+```
+
+I tend to like the plot on the left better because it is more clear that the 
+y axis has been translated to a logarithmic scale. 
+
+You are not, however, limited to only tranfering the y axis. There are similar 
+functions to to perform similar operations on different aesthetics:
+
+- `scale_x_continuous()`
+- `scale_x_discrete()`
+- `scale_y_discrete()`
+- `scale_color()`
+- etc. 
+
