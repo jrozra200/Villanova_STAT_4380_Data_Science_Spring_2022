@@ -1,0 +1,51 @@
+---
+title: "In Class Exercise on Data Wrangling"
+author: "Jake Rozran"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include = FALSE}
+library(mdsr) # The book package
+library(tidyverse) # The tidyverse
+```
+
+Part 1: Load the `ordway_birds` dataset and explore the data. What shape is the 
+data (how many rows/columns)?
+
+```{r load_data}
+
+
+```
+
+Part 2: What columns are in the dataset? You can use the `names()` function to 
+do this. 
+
+```{r data_names}
+
+
+```
+
+Part 3: Create a new dataset that selects, in this order, the `BandNumber`, 
+`Age`, `Weight`, `Temperature`, `TailLength`, `Sex`, `SpeciesName`, and `TrapID`.
+
+```{r new_cols}
+
+
+```
+
+Part 4: Create another new dataset that only has rows where the temperature is 
+not blank.
+
+```{r new_rows}
+
+
+```
+
+Part 5: Using a pipeline, combine part 3 and part 4 to create a final dataset 
+that only has the columns listed in 3 and rows desired in 4. 
+
+```{r new_cols_and_rows}
+
+
+```
