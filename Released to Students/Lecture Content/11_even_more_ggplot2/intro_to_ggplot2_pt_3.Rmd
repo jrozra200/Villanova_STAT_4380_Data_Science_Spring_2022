@@ -1,0 +1,129 @@
+---
+title: "Even More `ggplot2`"
+author: "Jake Rozran"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(mdsr)
+library(tidyverse)
+
+options(scipen = 999)
+
+# THE DATA WE'LL CONTINUE TO USE
+data("CIACountries") # GIMME THE DATA
+```
+
+# Guides
+
+The book wants you to use "guides" instead of "legends," but let's be real... 
+everyone knows they are legends. 
+
+There is more to guide, however, than just legends. It should be clear what each 
+aesthetic is and how to interpret it. 
+
+## Legends
+
+In the last plot, I showed how to turn off a legend. The same configuration 
+will change the position.
+
+I tend to feel that a legend should be at the top of a plot. It is the first 
+place eyes go when they read a plot. 
+
+```{r legends}
+ggplot(data = CIACountries, aes(x = educ, y = gdp)) +
+    geom_point(aes(color = net_users, size = roadways)) +
+    coord_trans(y = "log10") + 
+    theme(legend.position = "top") # Can be right, left, bottom, and top
+```
+
+## Titles
+
+Legends aren't the only guides, though. You must also be specific in your graph 
+and axis titling. This is an easy way to add non-obtrusive information to your 
+data visualization.
+
+```{r titles}
+ggplot(data = CIACountries, aes(x = educ, y = gdp)) +
+    geom_point(aes(color = net_users, size = roadways)) +
+    coord_trans(y = "log10") + 
+    scale_y_continuous(labels = scales::dollar) +
+    theme(legend.position = "top") +
+    ggtitle("Country Education Spending vs. GDP vs. Internet Usage vs. Roadway Development",
+            subtitle = "CIA Data: 2014") +
+    xlab("Education Spending (% of GDP)") +
+    ylab("Gross Domestic Product per capita ($/person)")
+```
+
+## Labels & Text
+
+This example graph likely has too many aesthetics, but let's add more 
+text to the graph to clear up which country is which.
+
+```{r labels}
+ggplot(data = CIACountries, aes(x = educ, y = gdp)) +
+    geom_point(aes(color = net_users, size = roadways)) +
+    geom_text(aes(label = country), 
+              check_overlap = TRUE, 
+              nudge_x = 0.15,
+              hjust = 0) +
+    coord_trans(y = "log10") + 
+    scale_y_continuous(labels = scales::dollar) +
+    theme(legend.position = "top") +
+    ggtitle("Country Education Spending vs. GDP vs. Internet Usage vs. Roadway Development",
+            subtitle = "CIA Data: 2014") +
+    xlab("Education Spending (% of GDP)") +
+    ylab("Gross Domestic Product per capita ($/person)")
+```
+
+This is too much... but... this is also just an example to show you all the 
+things.
+
+# Facets
+
+When one plot has too much going on (see the last plot we made), it is sometimes 
+a good idea to create separate plots for subsets of data. We call this faceting.
+
+Be careful, though. It is now unclear what that facet means!
+
+```{r facets}
+ggplot(data = CIACountries[!is.na(CIACountries$net_users), ], 
+       aes(x = educ, y = gdp)) +
+    geom_point(aes(size = roadways)) + 
+    coord_trans(y = "log10") + 
+    facet_wrap(~ net_users, nrow = 1) + 
+    theme(legend.position = "top")
+```
+
+We can also "lie" with facets (well... with the scales in a facet).
+
+```{r bad_facet}
+ggplot(data = CIACountries[!is.na(CIACountries$net_users), ], 
+       aes(x = educ, y = gdp)) +
+    geom_point(aes(size = roadways)) + 
+    coord_trans(y = "log10") + 
+    facet_wrap(~ net_users, nrow = 1, scales = "free") + 
+    theme(legend.position = "top")
+```
+
+It is not ALWAYS a bad idea to change the scale by facet, but this is way worse! 
+Now you don't see the nice relationship that popped up before. 
+
+# Layers
+
+Just as the name implies, we can also add information by layering in data. We've 
+done this in a very small way by layering in text before. 
+
+You can, though, layer multiple data viz. 
+
+```{r layers}
+ggplot(data = CIACountries, 
+       aes(x = net_users, y = gdp, group = net_users, color = net_users)) +
+    geom_boxplot() +
+    geom_jitter(alpha = 0.25)
+```
+
+Why do this? This shows the user how many countries are in each group!
+
+# IN CLASS EXERCISE!
