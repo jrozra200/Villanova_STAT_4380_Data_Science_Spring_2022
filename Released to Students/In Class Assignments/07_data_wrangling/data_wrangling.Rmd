@@ -1,51 +1,87 @@
 ---
-title: "In Class Exercise on Data Wrangling"
+title: "In Class with `dplyr`"
 author: "Jake Rozran"
-date: "`r Sys.Date()`"
+date: "2/15/2022"
 output: html_document
 ---
 
-```{r setup, include = FALSE}
-library(mdsr) # The book package
-library(tidyverse) # The tidyverse
+```{r setup, include=FALSE}
+library(tidyverse)
+library(lubridate)
+options(scipen = 999)
+
+stock_data <- read_csv("~/Documents/rle_nightly/data/nightly_run/pick_tracker_new.csv")
+stock_data
 ```
 
-Part 1: Load the `ordway_birds` dataset and explore the data. What shape is the 
-data (how many rows/columns)?
+1. Select the following columns: `symbol`, `test_start_date`, `test_end_date`,
+`start`, `purchase_price`, `purchase_amount`, `current_price`, `security_type`
 
-```{r load_data}
-
-
+```{r select}
+stock_data %>% 
+    select(symbol, test_start_date, test_end_date, start, purchase_price,
+           purchased_amount, current_price, security_type)
 ```
 
-Part 2: What columns are in the dataset? You can use the `names()` function to 
-do this. 
+2. Filter for Crypto and `start` of "64 day pred"
 
-```{r data_names}
-
-
+```{r filter}
+stock_data %>% 
+    filter(security_type == "Crypto" & 
+               start == "64 day pred")
 ```
 
-Part 3: Create a new dataset that selects, in this order, the `BandNumber`, 
-`Age`, `Weight`, `Temperature`, `TailLength`, `Sex`, `SpeciesName`, and `TrapID`.
+3. create a column that pulls out the year of the start date (use lubridate 
+`year` function)
 
-```{r new_cols}
-
-
+```{r create_column}
+stock_data %>% 
+    mutate(test_start_date = as_date(test_start_date, format = "%m/%d/%y"),
+           start_year = year(test_start_date)) %>% 
+    select(symbol, test_start_date, start_year)
 ```
 
-Part 4: Create another new dataset that only has rows where the temperature is 
-not blank.
+4. Create a count of how many purchases there were for each `start` value
 
-```{r new_rows}
-
-
+```{r purchase_count}
+stock_data %>% 
+    group_by(start) %>% 
+    summarise(purchase_count = length(symbol))
 ```
 
-Part 5: Using a pipeline, combine part 3 and part 4 to create a final dataset 
-that only has the columns listed in 3 and rows desired in 4. 
+5. Rename the columns `test_start_date` and `test_end_date` to `start_date` and
+`end_date`, respectively
 
-```{r new_cols_and_rows}
-
-
+```{r rename}
+stock_data %>%
+    rename(start_date = test_start_date, 
+           end_date = test_end_date) %>%
+    select(symbol, 
+           start_date,
+           end_date)
 ```
+
+6. Which stock has the most rows?
+
+```{r which_is_most}
+stock_data %>% 
+    group_by(symbol) %>% 
+    summarise(symbol_count = length(symbol)) %>%
+    arrange(desc(symbol_count)) %>% 
+    head(1)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

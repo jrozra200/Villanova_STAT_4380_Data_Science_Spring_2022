@@ -1,0 +1,113 @@
+---
+title: "Into to `dplyr`"
+author: "Jake Rozran"
+date: "2/15/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(mdsr)
+library(lubridate)
+
+data("presidential")
+head(presidential)
+str(presidential)
+```
+
+# A grammar for Data Wrangling
+
+With `ggplot2` we learned a grammar for data visualization. We were able to 
+incrementally build data viz by linking commands (we did that with the `+`).
+
+Now with `dplyr`, we use pipes (which look like `%>%`) to link data wrangling 
+commands together. The first bunch:
+
+- `select()`: Take a subset of columns
+- `filter()`: Take a subset of rows
+- `mutate()`: add a new column or modify an existing column
+- `arrange()`: sort the rows
+- `summarize()`: some aggregation across rows.
+- `group_by()`: literally group by a feature in your data.
+
+# Let's look at `select` and `filter`
+
+```{r select}
+select(presidential, name, party)
+```
+
+```{r filter}
+filter(presidential, party == "Republican")
+```
+
+```{r filter_select_the_hard_way}
+select(filter(presidential, party == "Republican"), name, party)
+```
+
+## Let's use `%>%` instead
+
+```{r filter_with_pipe}
+presidential %>% 
+    filter(party == "Democratic")
+```
+
+```{r select_with_pipe}
+presidential %>% 
+    select(name, start)
+
+```
+
+```{r select_filter_atthesametime}
+presidential %>% 
+    filter(party == "Democratic") %>% 
+    select(name, start)
+```
+
+# `mutate` and `rename`
+
+```{r mutate}
+presidential <- presidential %>% 
+    mutate(term.length = interval(start, end) / dyears(1), 
+           party = ifelse(party == "Republican", "R", "D")) %>% 
+    rename(term_length = term.length)
+presidential
+```
+
+# `arrange` function
+
+```{r arrange}
+presidential %>% 
+    arrange(desc(term_length), desc(start))
+```
+
+
+# `summarize` and `group_by`
+
+```{r summarise}
+presidential %>% 
+    group_by(party) %>% 
+    summarise(num_years = sum(term_length),
+              num_presidents = length(name),
+              num_terms = num_years / 4) %>% 
+    mutate(avg_stay = num_years / num_presidents) %>% 
+    filter(party == "D") %>% 
+    select(party, avg_stay)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

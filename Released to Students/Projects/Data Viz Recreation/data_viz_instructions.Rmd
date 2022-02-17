@@ -1,0 +1,61 @@
+---
+title: "Data Viz Recreation Instructions"
+author: "Jake Rozran"
+date: "2/17/2022"
+output: html_document
+---
+
+## Overview
+
+
+**Due:**                 Week 10 (March 15 & 17)  
+**Teams:**               You may choose your team of 2; will be randomly 
+assigned on Tuesday (if you don't have a partner)  
+**Presentation Order:**  Will be randomly selected  
+**Presentation Length:** 16 minutes  
+
+## Instructions
+
+1. Find a data visualization and the data to build it 
+    - I recommend using the 
+    [Makover Monday (MoM) Website](https://www.makeovermonday.co.uk/data/)
+2. Recreate the visualization in R as closely as possible
+3. Show the original
+4. Walk through the steps you've taken to recreate it
+5. Show the end results
+6. Discuss the shortcomings you'd like to address
+7. Submit the slides and RMarkdown code to Blackboard (**BEFORE** you present)
+
+## Evaluation
+
+You'll be evaluated on how close you've come to the data viz you've selected 
+and how well you're team worked together (I'm still working out how to evaluate 
+that). 
+
+As a gentle reminder, this project is worth 20% of your final grade. 
+
+## Presentation Order
+
+```{r presentation_order, eval = FALSE, echo = FALSE, message = FALSE}
+library(knitr)
+library(kableExtra)
+library(dplyr)
+
+seed <- 3172022
+set.seed(seed, sample.kind = "default")
+
+all_students <- c("Claude", "Zhipeng", "Jack", "Kevin", "Catherine",
+                  "Sofia", "Aelia", "Fiona", "Erin", "Andy", "Andrew", 
+                  "Ray", "Nate", "Sarah", "Braeden", "De'ana")
+
+random_order <- sample(all_students, 16, replace = FALSE)
+
+presentation_order <- data.frame(order = 1:length(random_order),
+                                 student = random_order,
+                                 day = c(rep("day 1", 8), rep("day 2", 8)))
+
+presentation_order %>% 
+    kbl(align = "l") %>% 
+    kable_styling(bootstrap_options = c("striped", "hover"))
+```
+
