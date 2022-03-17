@@ -1,0 +1,67 @@
+---
+title: "Joins AGAIN!"
+author: "Jake Rozran"
+date: '2022-03-08'
+output: html_document
+---
+
+```{r setup, include = FALSE}
+library(tidyverse)
+```
+
+## Joins
+
+Two weeks ago, we learned about joins. We are taking two different datasets and 
+joining them on a shared column.
+
+1. `inner_join`: return back to us a dataset with only those rows that match 
+from both datasets. 
+2. `left_join`: return back all of the rows from the "left" dataset, regardless 
+if they match anything from the "right" dataset
+3. `right_join`: return back all of the rows from the "right" dataset, 
+regardless if they match anything from the "left" dataset
+4. `full_join`: returns back all rows from both datasets regardless of match.
+
+```{r data}
+left_data <- data.frame(id = 1:10,
+                        type = "left dataset")
+left_data
+
+right_data <- data.frame(id = 6:15,
+                         class = "right dataset")
+right_data
+```
+
+```{r inner_join}
+inner <- left_data %>% 
+    inner_join(right_data, by = c("id" = "id"))
+inner
+```
+
+```{r left_join}
+left <- left_data %>% 
+    left_join(right_data, by = c("id" = "id"))
+left
+```
+
+```{r right_join}
+right <- left_data %>% 
+    right_join(right_data, by = c("id" = "id"))
+right
+```
+
+```{r full_join}
+full <- left_data %>% 
+    full_join(right_data, by = c("id" = "id"))
+full
+```
+
+
+
+
+
+
+
+
+
+

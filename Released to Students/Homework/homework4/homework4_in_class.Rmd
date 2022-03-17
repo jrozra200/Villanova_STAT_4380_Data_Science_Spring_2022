@@ -1,0 +1,212 @@
+---
+title: "Homework #4 - Data Wrangling"
+author: "Jake Rozran"
+output: html_document
+---
+
+
+**Change your name above and save the file.  Also, install the following **
+**packages (that you don't have already).  This is the last time I'll remind** 
+**you of these...**
+
+```{r setup}
+library(tidyverse)
+library(nycflights13)
+library(mdsr)
+library(lubridate)
+library(scales)
+
+head(flights)
+summary(flights)
+table(flights$dest)
+table(flights$origin)
+```
+
+Note, there is a *lubridate* package that has some useful date functions, like 
+`month()` and `week()`. They are particularly useful with the `label = TRUE` 
+option. Feel free to play around with it, but this package is not required to 
+complete this assignment.
+
+**Problem 1) The `nycflights` package contains data on all flights from the **
+**New York City area in 2013.  Use the `flights` data frame to answer the ** **following...**
+
+a) What month had the highest proportion of canceled flights? (as recorded by a 
+missing departure or arrival time)
+
+```{r 1a}
+flights %>% 
+    group_by(month) %>% 
+    summarise(canceled_flights = sum(is.na(dep_time) | is.na(arr_time)),
+              jake_canceled = length(month[is.na(dep_time) | is.na(arr_time)]),
+              and_proportion = sum(is.na(dep_time) | is.na(arr_time)) / 
+                  length(month),
+              nate_proportion = sum(is.na(dep_time) | is.na(arr_time)) / 
+                  n(),
+              total_month = length(month),
+              other_total = n()) %>% 
+    mutate(prop_canceled = canceled_flights / total_month)
+
+flights %>% 
+    group_by(month) %>% 
+    summarise(canceled_proportion = sum(is.na(dep_time) | is.na(arr_time)) / 
+                  n()) %>% 
+    arrange(desc(canceled_proportion))
+
+flights %>% 
+    mutate(month_label = month(time_hour, label = TRUE, abbr = FALSE)) %>% 
+    group_by(month_label) %>% 
+    summarise(canceled_proportion = percent(sum(is.na(dep_time) | is.na(arr_time)) / n(), accuracy = 0.01)) %>% 
+    arrange(desc(canceled_proportion))
+```
+
+b) What month had the lowest proportion of canceled flights?
+
+```{r 1b}
+flights %>% 
+    mutate(month_label = month(time_hour, label = TRUE, abbr = FALSE)) %>% 
+    group_by(month_label) %>% 
+    summarise(canceled_proportion = percent(sum(is.na(dep_time) | is.na(arr_time)) / n(), accuracy = 0.01)) %>% 
+    arrange(canceled_proportion)
+```
+
+c) Interpret seasonal patterns of canceled flights.
+
+```{r 1c}
+graph_dat <- flights %>% 
+    mutate(month_label = month(time_hour, label = TRUE, abbr = FALSE)) %>% 
+    group_by(month_label) %>% 
+    summarise(canceled_proportion = percent(sum(is.na(dep_time) | is.na(arr_time)) / n(), accuracy = 0.01),
+              canceled_flights = sum(is.na(dep_time) | is.na(arr_time)),
+              total_flights = n())
+
+prop <- ggplot(graph_dat, aes(x = month_label, y = canceled_proportion, group = 1)) +
+    geom_point() +
+    geom_line()
+
+canc <- ggplot(graph_dat, aes(x = month_label, y = canceled_flights, group = 1)) +
+    geom_point() +
+    geom_line()
+
+tot <- ggplot(graph_dat, aes(x = month_label, y = total_flights, group = 1)) +
+    geom_point() +
+    geom_line()
+
+gridExtra::grid.arrange(prop, canc, tot)
+```
+
+**Problem 2) Continuing with the `nycflights` data...**
+
+a) What plane (specified by `tailnum`) traveled the most times from NYC airports 
+in 2013?
+
+```{r 2a}
+flights %>% 
+    group_by(tailnum) %>% 
+    na.omit() %>%
+    summarise(most_travels = length(tailnum),
+              other_travels = n()) %>%
+    arrange(desc(most_travels))
+
+flights %>% 
+    filter(!is.na(tailnum) & 
+               !is.na(dep_time) & 
+               !is.na(arr_time)) %>%
+    group_by(tailnum) %>% 
+    summarise(most_travels = length(tailnum),
+              other_travels = n()) %>%
+    arrange(desc(most_travels))
+
+
+```
+
+b) Plot the number of trips per week over the year for the plane with the most 
+times traveled. Make sure to label the axes appropriately and add a title to the 
+graph. Comment on what you observe.
+
+1. plot == ggplot
+
+2. trips per week (create a week column == mutate)
+3. trips per week (aggregate by week == group_by & summarise)
+4. for the plane with the most times traveled (find the plane - from last problem)
+5. for the plane with the most times traveled (remove other planes - filter)
+
+1. filter by this plane (#5 above)
+2. mutate to create a week column
+3. group by that week column and summarise
+    + count the number of trips for this plane
+
+LAST STEP: ggplot 
+
+```{r 2b}
+most_plane <- flights %>% 
+    filter(!is.na(tailnum) & 
+               !is.na(dep_time) & 
+               !is.na(arr_time)) %>%
+    group_by(tailnum) %>% 
+    summarise(most_travels = length(tailnum),
+              other_travels = n()) %>%
+    arrange(desc(most_travels)) %>% 
+    head(1) %>%
+    pull(tailnum)
+most_plane
+
+graph_data <- flights %>% 
+    filter(tailnum == most_plane) %>% 
+    mutate(week_column = floor_date(time_hour, unit = "week")) %>% 
+    group_by(week_column) %>% 
+    summarise(trips = n())
+
+ggplot(graph_data, aes(x = week_column, y = trips)) + 
+    geom_bar(stat = "identity") + 
+    ggtitle(paste0("Trips per week for tailnum ", most_plane)) +
+    ylab("Trips per Week") +
+    xlab("Week (2013)") 
+```
+
+**Problem 3) The `Violations` data set in the `mdsr` package contains **
+**information regarding the outcome of health inspections of restaurants in **
+**NYC. Use these data to calculate the median violation score by zip code for **
+**zip codes in Manhattan with 50 or more inspections. What pattern do you see **
+**between the number of inspections and the median score?**
+
+1. count the violations by zip code (group_by & summarize)
+2. only use data from Manhattan (filter)
+3. only analyze those zips with 50 or more inspections (filter)
+
+1. Filter on `boro`
+2. group by `zipcode`
+3. summarize the number of inspections (`summarize`)
+    - summarise the median score
+4. filter out those that are less than 50 inspections per `zipcode`
+
+```{r 3}
+graph_data <- Violations %>% 
+    filter(toupper(boro) == "MANHATTAN") %>% 
+    group_by(zipcode) %>% 
+    summarise(count = n(),
+              median_score = median(score, na.rm = TRUE)) %>% 
+    filter(count >= 50)
+
+ggplot(graph_data, aes(x = count, y = median_score)) + 
+    geom_point() + 
+    geom_smooth()
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

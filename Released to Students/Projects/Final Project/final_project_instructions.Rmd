@@ -1,0 +1,110 @@
+---
+title: "Final Project - Instructions"
+author: "Jake Rozran"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+## Overview
+
+**Due:**                 Week 17 (May 2 - 5; this is finals week)  
+**Presentation Order:**  Each person will get to pick their presentation time, 
+but the pick order will be randomly assigned (more on that below).  
+**Presentation Length:** 30 minutes (25 minutes with 5 minutes Q & A) 
+
+## Instructions
+
+This project will evaluate your understanding of the entire course. You'll need 
+to find an interesting problem that can be answered with data, then: 
+
+1. find the data to evaluate your hypothesis
+2. wrangle the data
+3. visualize the results
+4. come to some conclusions
+5. evaluate any ethical concerns
+6. identify any shortcomings or things you'd like to address if you had more 
+time
+
+To support this effort, you'll need to schedule at least one meeting with me to 
+review your idea and the dataset(s) - you may schedule more if you'd like. You 
+can schedule this via 
+[calendly](https://calendly.com/jake-rozran/final-project-meeting-review). You 
+will need to have your first meeting with me BEFORE 4/7. My calendar is packed, 
+so please don't leave this until the last minute. 
+
+## Evaluation
+
+You'll be graded on how well you show your understanding of the materials from 
+throughout the class. This includes:
+
+1. Data wrangling
+2. Data visualization
+3. Clarity of analysis
+4. Ethical considerations
+
+Additionally, part of your grade will be your participation for your classmate's 
+presentation. Each person will be required to attend one other day besides their 
+presentation day.
+
+## Presentation Order
+
+The 
+[finals schedule is posted](https://www1.villanova.edu/villanova/enroll/registrar/exam_schedules/spring_day.html), 
+so you should be able to plan around your other activities for that week. It 
+will be a snake draft, so if you get the last pick for your presentation time, 
+you'll get first pick for when you attend another session. We will be presenting 
+over the following schedule: 
+
+1. May 2, 2022 (8:30-10:30am)
+    - Presenter 1: Fiona
+    - Presenter 2: Ray
+    - Presenter 3: Sarah
+    - Attendees: Nate, Zhipeng, Erin, Andy
+2. May 3, 2022 (8:30-10:30am)
+    - Presenter 1: Aelia
+    - Presenter 2: Andy
+    - Presenter 3: Catherine
+    - Presenter 4: Claude
+    - Presenter 5: Sofia
+    - Attendees: Fiona, Ray, Jack, Andrew
+3. May 4, 2022 (8:30-10:30am)
+    - Presenter 1: Jack
+    - Presenter 2: Erin
+    - Presenter 3: Zhipeng
+    - Presenter 4: Braeden
+    - Attendees: Claude, Kevin, De'ana, Sofia
+4. May 5, 2022 (8:30-10:30am)
+    - Presenter 1: Kevin
+    - Presenter 2: Andrew
+    - Presenter 3: Nate
+    - Presenter 4: De'ana
+    - Attendees: Catherine, Sarah, Braeden, Aelia
+
+## Draft Order
+
+You'll get to pick, in the order shown below, your presentation time. We will be 
+choosing these times when we get back from Spring Break on March 8.  
+
+Here is the randomly assigned order that you'll get to pick your presentation 
+times and alternate session.
+
+```{r random_picks, echo = FALSE, message = FALSE}
+library(knitr)
+library(kableExtra)
+library(dplyr)
+
+all_students <- c("Claude", "Zhipeng", "Jack", "Kevin", "Catherine",
+                  "Sofia", "Aelia", "Fiona", "Erin", "Andy", "Andrew", 
+                  "Ray", "Nate", "Sarah", "Braeden", "De'ana")
+
+seed <- 8675309
+set.seed(seed)
+random_order <- sample(all_students, length(all_students), replace = FALSE)
+
+pick_order <- data.frame(pick = 1:length(all_students),
+                         student = random_order)
+
+pick_order %>% 
+    kbl(align = "l") %>% 
+    kable_styling(bootstrap_options = c("striped", "hover"))
+```

@@ -1,0 +1,137 @@
+---
+title: "Two Table Wrangling - In Class"
+author: "your name here"
+date: "2/24/2022"
+output: html_document
+---
+
+```{r setup, include = FALSE}
+library(Lahman) # INSTALL THIS PACKAGE IF NECESSARY
+library(tidyverse)
+```
+
+## Manny Ramirez
+
+1. There is a dataset called `Batting` in the `Lahman` package. Start by 
+creating a dataset named `manny` that filters Manny Ramirez's data from the 
+`Batting` data. His `playerID` is `ramirma02`.
+
+```{r 1}
+manny <- Batting %>% 
+    filter(playerID == "ramirma02")
+manny
+```
+
+2. From this data, create a summary that calculates Manny's career:
+    - Number of years played
+    - First year played
+    - Last year played
+    - Batting Average (total hits (`H`) divided by total at bats (`AB`))
+    - Total Homeruns (`HR`)
+    - Total Runs Batted In (`RBI`)
+    
+```{r 2}
+manny_summary <- manny %>% 
+    summarise(years_played = max(yearID) - min(yearID),
+              first_year = min(yearID),
+              last_year = max(yearID),
+              batting_avg = sum(H) / sum(AB),
+              total_HR = sum(HR),
+              total_RBI = sum(RBI))
+manny_summary
+```
+    
+3. Create a new variable `manny_by_year` that calculates by year the following: 
+    - Batting Average (total hits (`H`) divided by total at bats (`AB`))
+    - Total Homeruns (`HR`)
+    - Total Runs Batted In (`RBI`)
+    - Number of teams he played on
+    - MAKE SURE THAT YOU KEEP MANNY'S `playerID` AS PART OF THIS DATASET
+    
+```{r manny_by_year}
+manny_by_year <- manny %>% 
+    group_by(yearID) %>%
+    summarise(total_ba = sum(H) / sum(AB),
+              total_hr = sum(HR),
+              total_rbi = sum(RBI),
+              total_teams = length(teamID)) %>% 
+    mutate(playerID = "ramirma02")
+manny_by_year
+```
+
+4. There is another dataset called `Master`, which includes details on 
+each player in the dataset. Join the `Master` dataset to the `manny_by_year` 
+dataset and then create a new column that calculates Manny's age for that 
+season. The output should only include `playerID`, `yearID`, age during that 
+year, batting average, homeruns, runs batted in, and the number of teams he 
+played on. 
+
+```{r age_question}
+manny_age <- manny_by_year %>%
+    inner_join(Master, by = c("playerID" = "playerID")) %>%
+    mutate(age = yearID - birthYear) %>% 
+    select(playerID,
+           yearID,
+           age,
+           total_ba,
+           total_hr,
+           total_rbi,
+           total_teams)
+
+manny_age
+```
+
+
+5. Create a new variable `cal_by_year` that calculates the following by year for 
+Cal Ripken Jr. (`ripkeca01`): 
+    - Batting Average (total hits (`H`) divided by total at bats (`AB`))
+    - Total Homeruns (`HR`)
+    - Total Runs Batted In (`RBI`)
+    - Number of teams he played on
+    
+```{r cal_by_year}
+cal <- Batting %>% 
+    filter(playerID == "ripkeca01")
+
+cal_by_year <- cal %>% 
+    group_by(yearID) %>% 
+    summarise(total_ba = sum(H) / sum(AB),
+              total_hr = sum(HR),
+              total_rbi = sum(RBI),
+              total_teams = length(teamID)) %>% 
+    mutate(playerID = "ripkeca01")
+
+cal_by_year <- Batting %>% 
+    filter(playerID == "ripkeca01") %>% 
+    group_by(yearID) %>% 
+    summarise(total_ba = sum(H) / sum(AB),
+              total_hr = sum(HR),
+              total_rbi = sum(RBI),
+              total_teams = length(teamID)) %>% 
+    mutate(playerID = "ripkeca01")
+cal_by_year
+```
+    
+6. Using an `inner_join`, join the `manny_by_year` and `cal_by_year` datasets. 
+Which years did their careers overlap? Who was better (according to these 
+metrics)?
+
+```{r manny_and_cal}
+new_data <- manny_by_year %>% 
+    inner_join(cal_by_year, by = c("yearID" = "yearID"))
+
+new_data %>% 
+    select(yearID,
+           total_rbi.x,
+           total_rbi.y)
+```
+
+
+
+
+
+
+
+
+
+

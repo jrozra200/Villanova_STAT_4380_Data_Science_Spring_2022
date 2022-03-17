@@ -2,7 +2,9 @@
 title: "Data Viz Recreation Instructions"
 author: "Jake Rozran"
 date: "2/17/2022"
-output: html_document
+output:
+  html_document: default
+  pdf_document: default
 ---
 
 ## Overview
@@ -36,23 +38,34 @@ As a gentle reminder, this project is worth 20% of your final grade.
 
 ## Presentation Order
 
-```{r presentation_order, eval = FALSE, echo = FALSE, message = FALSE}
+```{r presentation_order, echo = FALSE, message = FALSE}
 library(knitr)
 library(kableExtra)
 library(dplyr)
-
-seed <- 3172022
-set.seed(seed, sample.kind = "default")
 
 all_students <- c("Claude", "Zhipeng", "Jack", "Kevin", "Catherine",
                   "Sofia", "Aelia", "Fiona", "Erin", "Andy", "Andrew", 
                   "Ray", "Nate", "Sarah", "Braeden", "De'ana")
 
-random_order <- sample(all_students, 16, replace = FALSE)
+groups <- c("Braeden & Sofia", 
+            "Zhipeng & Aelia",
+            "Erin & Fiona", 
+            "Ray & Claude",
+            "Catherine & Sarah & De'ana", 
+            "Andy & Andrew",
+            "Jack & Nate & Kevin")
+
+seed <- 3172022
+set.seed(seed, sample.kind = "default")
+deana_group <- sample(groups, 1, replace = FALSE)
+
+seed <- 3152022
+set.seed(seed, sample.kind = "default")
+random_order <- sample(groups, 7, replace = FALSE)
 
 presentation_order <- data.frame(order = 1:length(random_order),
                                  student = random_order,
-                                 day = c(rep("day 1", 8), rep("day 2", 8)))
+                                 day = c(rep("day 1", 4), rep("day 2", 3)))
 
 presentation_order %>% 
     kbl(align = "l") %>% 

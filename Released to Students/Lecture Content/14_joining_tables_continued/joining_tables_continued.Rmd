@@ -1,0 +1,68 @@
+---
+title: "Joining Tables - Continued"
+author: "Jake Rozran"
+date: '`r Sys.Date()`'
+output: html_document
+---
+
+```{r setup, include = FALSE}
+library(tidyverse)
+```
+
+## Remember Joins?
+
+From last class, we know we can do a bunch of types of joins:
+
+1. `inner_join`: get back only the rows that match from the 2 datasets
+2. `left_join`: get back all of the rows from the left dataset, regardless if 
+they have a match on the right dataset
+3. `right_join`: get back all of the rows from the right dataset, regardless if 
+they have a match on the left dataset
+4. `full_join`: get back all of the rows from both datasets, regardless if there 
+is match in the other dataset.
+
+## Join Examples
+
+```{r data}
+left_data <- data.frame(id = 1:10,
+                        type = "left dataset")
+left_data
+
+right_data <- data.frame(id = 6:15,
+                         class = "right dataset")
+right_data
+```
+
+```{r inner_join}
+inner <- left_data %>% 
+    inner_join(right_data, by = c("id" = "id"))
+inner
+```
+
+```{r left_join}
+left <- left_data %>% 
+    left_join(right_data, by = c("id" = "id"))
+left
+```
+
+```{r right_join}
+right <- left_data %>% 
+    right_join(right_data, by = c("id" = "id"))
+right
+```
+
+```{r full_join}
+full <- left_data %>% 
+    full_join(right_data, by = c("id" = "id"))
+full
+```
+
+```{r anti_join}
+anti_left <- left_data %>% 
+    anti_join(right_data, by = c("id" = "id"))
+anti_left
+
+anti_right <- right_data %>% 
+    anti_join(left_data, by = c("id" = "id"))
+anti_right
+```

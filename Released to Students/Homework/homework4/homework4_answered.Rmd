@@ -1,0 +1,163 @@
+---
+title: "Homework #4 - Data Wrangling"
+author: "your name"
+output: html_document
+---
+
+
+**Change your name above and save the file.  Also, install the following **
+**packages (that you don't have already).  This is the last time I'll remind** 
+**you of these...**
+
+```{r setup}
+library(tidyverse)
+library(nycflights13)
+library(mdsr)
+library(lubridate)
+
+head(flights)
+summary(flights)
+```
+
+Note, there is a *lubridate* package that has some useful date functions, like 
+`month()` and `week()`. They are particularly useful with the `label = TRUE` 
+option. Feel free to play around with it, but this package is not required to 
+complete this assignment.
+
+**Problem 1) The `nycflights` package contains data on all flights from the **
+**New York City area in 2013.  Use the `flights` data frame to answer the ** **following...**
+
+a) What month had the highest proportion of canceled flights? (as recorded by a 
+missing departure or arrival time)
+
+```{r 1a}
+flights %>% 
+    mutate(month_label = month(time_hour, label = TRUE, abbr = FALSE)) %>% 
+    group_by(month_label) %>%
+    summarise(total_flights = length(month_label),
+              total_canceled_flights = length(month_label[is.na(dep_time)])) %>% 
+    mutate(percent_canceled = total_canceled_flights / total_flights) %>% 
+    arrange(desc(percent_canceled)) %>% 
+    head(1)
+```
+
+b) What month had the lowest proportion of canceled flights?
+
+```{r 1b}
+flights %>% 
+    mutate(month_label = month(time_hour, label = TRUE, abbr = FALSE)) %>% 
+    group_by(month_label) %>%
+    summarise(total_flights = length(month_label),
+              total_canceled_flights = length(month_label[is.na(dep_time)])) %>% 
+    mutate(percent_canceled = total_canceled_flights / total_flights) %>% 
+    arrange(percent_canceled) %>% 
+    head(1)
+```
+
+c) Interpret seasonal patterns of canceled flights.
+
+```{r 1c}
+graph_dat <- flights %>% 
+    mutate(month_label = month(time_hour, label = TRUE, abbr = FALSE)) %>% 
+    group_by(month_label) %>%
+    summarise(total_flights = length(month_label),
+              total_canceled_flights = length(month_label[is.na(dep_time)])) %>% 
+    mutate(percent_canceled = total_canceled_flights / total_flights)
+
+perc <- ggplot(graph_dat, aes(x = month_label, y = percent_canceled, group = 1)) + 
+    geom_line()
+
+tot <- ggplot(graph_dat, aes(x = month_label, y = total_flights, group = 1)) + 
+    geom_line()
+
+canc <- ggplot(graph_dat, aes(x = month_label, y = total_canceled_flights, group = 1)) + 
+    geom_line()
+
+gridExtra::grid.arrange(perc, tot, canc)
+
+```
+
+It is hard to see a super clear pattern in the data. There is definitely a spike 
+in the summer. There are also spikes in December and February. 
+
+**Problem 2) Continuing with the `nycflights` data...**
+
+a) What plane (specified by `tailnum`) traveled the most times from NYC airports 
+in 2013?
+
+```{r 2a}
+# FIRST TRY - DANG, THERE IS MISSING DATA
+flights %>% 
+    group_by(tailnum) %>%
+    summarise(total_flights = length(tailnum)) %>% 
+    arrange(desc(total_flights))
+
+# SECOND TRY - LET"S DEAL WITH MISSING DATA
+flights %>% 
+    filter(!is.na(tailnum) & 
+               !is.na(dep_time)) %>%
+    group_by(tailnum) %>%
+    summarise(total_flights = length(tailnum)) %>% 
+    arrange(desc(total_flights)) %>% 
+    head(1)
+```
+
+b) Plot the number of trips per week over the year for the plane with the most 
+times traveled. Make sure to label the axes appropriately and add a title to the 
+graph. Comment on what you observe.
+
+```{r 2b}
+max_tailnum <- flights %>% 
+    filter(!is.na(tailnum) & 
+               !is.na(dep_time)) %>%
+    group_by(tailnum) %>%
+    summarise(total_flights = length(tailnum)) %>% 
+    arrange(desc(total_flights)) %>% 
+    head(1) %>% 
+    pull(tailnum)
+
+graph_dat <- flights %>% 
+    filter(tailnum == max_tailnum &
+               !is.na(dep_time)) %>% 
+    mutate(week_of_year = floor_date(time_hour, unit = "week")) %>% 
+    group_by(week_of_year) %>% 
+    summarise(weekly_trips = length(week_of_year))
+
+ggplot(graph_dat, aes(x = week_of_year, y = weekly_trips)) + 
+    geom_bar(stat = "identity", fill = "navy") + 
+    ylab("Weekly Trips") +
+    xlab("Week of Year (2013)") + 
+    ggtitle(paste0("Weekly Trips for ", max_tailnum))
+```
+The number of trips for this plane seems to be, on average, about 12 or 13 per 
+week. There are weeks where this dips: July had a week way loser than that with 
+only 4 trips. There are also weeks with no trips: it seems that this plane did 
+not fly for 2 weeks in September. 
+
+**Problem 3) The `Violations` data set in the `mdsr` package contains **
+**information regarding the outcome of health inspections of restaurants in **
+**NYC. Use these data to calculate the median violation score by zip code for **
+**zip codes in Manhattan with 50 or more inspections. What pattern do you see **
+**between the number of inspections and the median score?**
+
+```{r 3}
+data("Violations")
+head(Violations)
+
+sum_dat <- Violations %>%
+    filter(boro == "MANHATTAN") %>% 
+    group_by(zipcode) %>% 
+    summarise(total_inspections = length(zipcode),
+              median_violation_score = median(score, na.rm = TRUE)) %>% 
+    filter(total_inspections >= 50) %>% 
+    arrange(desc(total_inspections))
+
+# FIRST TRY - NO PATTERN
+ggplot(sum_dat, aes(x = total_inspections, y = median_violation_score)) +
+    geom_point()
+
+```
+
+There does seem to be some evidence that as the number of inspections goes down, 
+so, too, does the violation score. This sort of makes sense... why inspect 
+regularly those places with "cleaner" restaurants? 
