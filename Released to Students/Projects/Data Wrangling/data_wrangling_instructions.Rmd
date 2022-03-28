@@ -1,0 +1,104 @@
+---
+title: "Data Wrangling Project"
+author: "YOUR NAME HERE"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+
+```{r setup, include = FALSE}
+library(tidyverse)
+```
+
+# TEXT WRANGLING
+
+For the following questions, use `grepl()` function. This function can find 
+patterns in text.
+
+1. Are all of the hamsters named?
+    a. Create a new column called `hname` searches for "NAME" in the `text` 
+    column and creates the value `TRUE` if it is there and `FALSE` if not
+    b. Create a summary variable named `hamster_name` that sums and sorts the 
+    count each value in `hname` from highest count to lowest count
+    c. Output `hamster_name`
+    d. How many posts do not include the name of the hamster?
+2. How many tagged users come from instagram? (hint: use the technique from 
+the last problem)
+
+# DISTRIBUTIONS
+
+3. Create a histogram of favorite counts.
+    a. Is the standard amount of bins appropriate? If not, assign the 
+    appropriate number of bins.
+    b. Make the outline of the bars black and the color of the bars navy
+    c. Ensure that the background of the graph is clear (or white)
+    d. Remove any tick marks
+    e. Remove any vertical grid lines. The horizontal grid lines should be light 
+    gray.
+    f. Make sure the axes are labeled nicely
+    g. Make sure there is a title on the plot
+    h. Describe the distribution
+4. Which hamster got the most favorites?
+5. Create a histogram of retweet counts.
+    a. Is the standard amount of bins appropriate? If not, assign the 
+    appropriate number of bins.
+    b. Make the outline of the bars white and the color of the bars purple
+    c. Ensure that the background of the graph is light gray
+    d. Change the color of any tick marks to purple
+    e. Remove any vertical grid lines. The horizontal grid lines should be white.
+    f. Make sure the axes are labeled nicely
+    g. Make sure there is a title on the plot
+    h. Describe the distribution
+6. Which hamster got the most retweets?
+
+# CORRELATION
+
+7. Is there a correlation between age of tweet (in days) and favorite count? You 
+will need to create a new column that counts the age of the tweet. I am asking 
+if the longer a tweet is up, does it get more likes? Or is it just a standard 1 
+day of visibility or something like that? (hint: remember the `lubridate` 
+package)
+
+# OTHER DATA MINING
+
+8. What is the first day in the dataset? What is the last day in the dataset?
+9. Are there any days with multiple posts? How many days?
+
+# WEATHER DATA
+
+10. Read in the weather data. 
+    a. What are the first and last day in the dataset?
+    b. How many weather stations are there?
+    c. Do all the stations have the same amount of entries?
+    d. Which station has the most entries?
+
+# JOINING DATA
+
+11. Join the hamster data to the weather data for the top station from the 
+previous problem (if there are any ties, pick your favorite). What issues do you 
+have and what choices did you make to join this data together?
+
+# PLOTS AND LABELS
+
+12. Plot the daily average temperature from the last 30 days of the dataset. 
+Create a data label that adds the favorite count of the daily hamster to the 
+plot (if there are multiple, you may choose one or paste all together).
+
+# MINING THE WEATHER DATA
+
+13. What is the average precipitation (`PRCP`) at "PHILADELPHIA INTERNATIONAL 
+AIRPORT, PA US"?
+14. What is the overall average (`TAVG`), minimum (`TMIN`), and maximum (`TMAX`) 
+temperature of this data at "PHILADELPHIA INTERNATIONAL AIRPORT, PA US"?
+15. What is the average, minimum, and maximum temperature from this data by 
+month at "PHILADELPHIA INTERNATIONAL AIRPORT, PA US"?
+16. What is the average, minimum, and maximum from this data by year at 
+"PHILADELPHIA INTERNATIONAL AIRPORT, PA US"?
+17. What is the average, minimum, and maximum from this data by year and month 
+at "PHILADELPHIA INTERNATIONAL AIRPORT, PA US"?
+
+# MAKING SENSE OF MANY GROUPS
+
+18. Plot the average daily temperature for the entire dataset grouped by station. 
+What issues do you see with the plot? Make it the clearest possible. 
+
