@@ -1,0 +1,90 @@
+---
+title: "Class Exercise for Loops"
+author: "YOUR NAME"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include = FALSE}
+library(tidyverse)
+```
+
+Write for loops to:
+
+1. Compute the mean of every column in `mtcars`.
+
+```{r number1}
+for(col in names(mtcars)) {
+    if(!is.numeric(mtcars[, col])) {
+        next
+    }
+    this_mean <- mean(mtcars[, col], na.rm = TRUE)
+    print(paste0("the mean of ", col, " is ", this_mean))
+}
+```
+
+2. Determine the type of each column in `nycflights13::flights`.
+
+```{r number2}
+for(col_name in names(nycflights13::flights)) {
+    print(nycflights13::flights %>% 
+              pull(col_name) %>% 
+              class())
+}
+```
+
+3. Compute the number of unique values in each column of `iris`.
+
+```{r number3}
+for(col in names(iris)) {
+    num_unique <- length(unique(iris[, col]))
+    print(paste0(col, ": ", num_unique))
+}
+```
+
+4. Generate 10 random normals from distributions with means of -10, 0, 10, 
+and 100. (hint: use the function `rnorm()`)
+
+```{r problem4}
+for(mean_val in c(-10, 0, 10, 100)) {
+    print(paste0("mean value:", mean_val, "; values: ", 
+                 rnorm(10, mean = mean_val)))
+}
+```
+
+5. Create the song "99 bottles of beer on the wall." 
+    - Do this with a `for` loop.
+    - Do this with a `while` loop. 
+    
+```{r problem5_for}
+for(i in 99:1) {
+    print(paste0(i, " bottles of beer on the wall.", i, 
+                 " bottles of beer. take one down, pass it arround, ",
+                 i - 1, " bottles of beer on the wall."))
+}
+
+i <- 99
+while(i >= 1) {
+    print(paste0(i, " bottles of beer on the wall.", i, 
+                 " bottles of beer. take one down, pass it arround, ",
+                 i - 1, " bottles of beer on the wall."))
+    i <- i - 1
+}
+```
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    

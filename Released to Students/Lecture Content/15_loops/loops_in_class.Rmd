@@ -1,0 +1,139 @@
+---
+title: "Loops in `R`"
+author: "Jake Rozran"
+date: '2022-03-22'
+output: html_document
+---
+
+```{r setup, include = FALSE}
+library(tidyverse)
+library(Lahman)
+```
+
+# Iteration in `R`
+
+Many of you might know about loops already. In `R` there are two types that we 
+are going to talk about.
+
+1. `for` loop
+2. `while` loop
+
+We are going to learn about these and then we are going to do our best to not 
+use as we progress through the class. 
+
+I use loops all the time. I encourage you to use them if they work. We'll learn 
+other methods that are better in `R`.
+
+## `for` loops
+
+```{r basic_for_loop}
+for(i in 1:6) {
+    print(i)
+}
+1:6
+```
+
+```{r another_for_loop}
+str(Teams)
+
+for(team in unique(Teams$name)) {
+    print(team)
+}
+
+unique(Teams$name)
+```
+
+```{r summary_for}
+total_data <- data.frame()
+
+for(team in unique(Teams$name)) {
+    team_data <- Teams %>% 
+        filter(name == team)
+    
+    first_year <- min(team_data$yearID)
+    last_year <- max(team_data$yearID)
+    seasons_in_existance <- last_year - first_year + 1
+    
+    tmp_data <- data.frame(name = team,
+                           first_season = first_year,
+                           last_season = last_year,
+                           seasons = seasons_in_existance)
+    
+    total_data <- bind_rows(total_data, tmp_data)
+}
+
+total_data
+
+team <- "Philadelphia Phillies"
+
+team_data <- Teams %>% 
+        filter(name == team)
+team_data    
+
+first_year <- min(team_data$yearID)
+last_year <- max(team_data$yearID)
+seasons_in_existance <- last_year - first_year + 1
+
+tmp_data <- data.frame(name = team,
+                       first_season = first_year,
+                       last_season = last_year,
+                       seasons = seasons_in_existance)
+tmp_data
+
+total_data <- bind_rows(total_data, tmp_data)
+total_data
+```
+
+```{r the_better_way}
+summary_data <- Teams %>% 
+    group_by(name) %>% 
+    summarise(first_season = min(yearID),
+              last_season = max(yearID)) %>% 
+    mutate(seasons = last_season - first_season + 1)
+summary_data
+```
+
+
+```{r across_columns}
+str(Teams)
+names(Teams)
+
+for(col in names(Teams)) {
+    if(!is.numeric(Teams[, col])) {
+        next
+    }
+    
+    this_mean <- mean(Teams[, col], na.rm = TRUE)
+    print(paste0("the mean of ", col, " is ", this_mean))
+}
+```
+
+## `while` loops
+
+```{r basic_while}
+i <- 0
+while(i <= 4) {
+    print(i)
+    i <- i + 1
+}
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

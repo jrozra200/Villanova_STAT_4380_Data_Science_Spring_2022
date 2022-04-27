@@ -1,0 +1,332 @@
+---
+title: "Data Wrangling Project"
+author: "Jake Rozran"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r twitter_part, include = FALSE}
+library(rtweet)
+
+token <- readRDS(Sys.getenv("TWITTER_PAT"))
+
+twitter_data <- get_timelines("hamsterofthe", n = 1000, token = token)
+twitter_data[, 1:16]
+twitter_data <- twitter_data %>% 
+    mutate(text = gsub("🐹", "HAMSTER NAME:", text)) %>% 
+    mutate(text = gsub("🏷️", "TAGGED USER:", text)) %>%
+    mutate(text = gsub("️🏷", "TAGGED USER:", text)) %>%
+    mutate(text = gsub("💕", "HEARTS", text)) 
+# write.csv(twitter_data[, 1:16], "hamster_data.csv", row.names = FALSE)
+```
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(lubridate)
+
+twitter_data <- read_csv("hamster_data.csv")
+twitter_data
+```
+
+# TEXT WRANGLING
+
+For the following questions, use `grepl()` function. This function can find 
+patterns in text.
+
+1. Are all of the hamsters named?
+    a. Create a new column called `hname` searches for "NAME" in the `text` 
+    column and creates the value `TRUE` if it is there and `FALSE` if not
+    b. Create a summary variable named `hamster_name` that sums and sorts the 
+    count each value in `hname` from highest count to lowest count
+    c. Output `hamster_name`
+    d. How many posts do not include the name of the hamster?
+    
+```{r problem1}
+# PART A
+twitter_data <- twitter_data %>%
+    mutate(hname = grepl("NAME", text))
+
+# PART B
+hamster_name <- twitter_data %>% 
+    group_by(hname) %>% 
+    summarise(count = length(hname)) %>% 
+    arrange(desc(count))
+
+# PART C
+hamster_name
+
+# PART D
+twitter_data %>% 
+    filter(hname == FALSE) %>% 
+    pull(hname) %>% 
+    length()
+```
+
+2. How many tagged users come from instagram? (hint: use the technique from 
+the last problem)
+
+```{r problem2}
+# PART A
+twitter_data <- twitter_data %>%
+    mutate(instagram = grepl("instagram", tolower(text)))
+
+# PART B
+instagram <- twitter_data %>% 
+    group_by(instagram) %>% 
+    summarise(count = length(hname)) %>% 
+    arrange(desc(count))
+
+# PART C
+instagram
+
+# PART D
+twitter_data %>% 
+    filter(instagram == TRUE) %>% 
+    pull(instagram) %>% 
+    length()
+```
+
+3. Create a histogram of favorite counts.
+    a. Is the standard amount of bins appropriate? If not, assign the 
+    appropriate number of bins.
+    b. Make the outline of the bars black and the color of the bars navy
+    c. Ensure that the background of the graph is clear (or white)
+    d. Remove any tick marks
+    e. Remove any vertical grid lines. The horizontal grid lines should be light 
+    gray.
+    f. Make sure the axes are labeled nicely
+    g. Make sure there is a title on the plot
+    h. Describe the distribution
+
+```{r problem3}
+ggplot(twitter_data, aes(x = favorite_count)) + 
+    geom_histogram(color = "black",
+                   fill = "navy") + 
+    xlab("Favorite Count") + 
+    ylab("Count") + 
+    ggtitle("Histogram of Favorite Count of Hamster of the Day") + 
+    theme(panel.background = element_blank(),
+          panel.grid.major.x = element_blank(),
+          panel.grid.minor.x = element_blank(),
+          panel.grid.major.y = element_line(color = "light gray"),
+          panel.grid.minor.y = element_line(color = "light gray"),
+          axis.ticks = element_blank())
+```
+
+The plot is bimodal (one mode at 0 and the other around 275), skewed right, and 
+there are no outliers.
+
+4. Which hamster got the most favorites?
+
+```{r problem4}
+twitter_data %>% 
+    filter(favorite_count == max(twitter_data$favorite_count)) %>% 
+    pull(text)
+```
+
+5. Create a histogram of retweet counts.
+    a. Is the standard amount of bins appropriate? If not, assign the 
+    appropriate number of bins.
+    b. Make the outline of the bars white and the color of the bars purple
+    c. Ensure that the background of the graph is light gray
+    d. Change the color of any tick marks to purple
+    e. Remove any vertical grid lines. The horizontal grid lines should be white.
+    f. Make sure the axes are labeled nicely
+    g. Make sure there is a title on the plot
+    h. Describe the distribution
+
+```{r problem5}
+ggplot(twitter_data, aes(x = retweet_count)) + 
+    geom_histogram(color = "white",
+                   fill = "purple") + 
+    xlab("Favorite Count") + 
+    ylab("Count") + 
+    ggtitle("Histogram of Favorite Count of Hamster of the Day") + 
+    theme(panel.background = element_rect(fill = "light gray"),
+          panel.grid.major.x = element_blank(),
+          panel.grid.minor.x = element_blank(),
+          panel.grid.major.y = element_line(color = "white"),
+          panel.grid.minor.y = element_line(color = "white"),
+          axis.ticks = element_line(color = "purple"))
+```
+
+The plot is bimodal (one mode at 0 and the other around 50), skewed right, and 
+there may be outliers above 150.
+
+6. Which hamster got the most retweets?
+
+```{r problem6}
+twitter_data %>% 
+    filter(retweet_count == max(twitter_data$retweet_count)) %>% 
+    pull(text)
+```
+
+7. Is there a correlation between age of tweet (in days) and favorite count? You 
+will need to create a new column that counts the age of the tweet. I am asking 
+if the longer a tweet is up, does it get more likes? Or is it just a standard 1 
+day of visibility or something like that? (hint: remember the `lubridate` 
+package)
+
+```{r problem7}
+twitter_data <- twitter_data %>% 
+    mutate(age_of_tweet = Sys.Date() - as_date(created_at))
+
+ggplot(twitter_data, aes(x = age_of_tweet, y = favorite_count)) + 
+    geom_point() + 
+    geom_smooth()
+```
+
+Really hard to tell what is happening here! The short answer is... no, there 
+does not seem to be a trend that the older tweets get more favorites.
+
+8. What is the first day in the dataset? What is the last day in the dataset?
+
+```{r problem8}
+twitter_data %>% 
+    summarise(first_day = min(created_at),
+              last_day = max(created_at))
+```
+
+10. Are there any days with multiple posts? How many days?
+
+```{r problem10}
+twitter_data %>% 
+    group_by(as_date(created_at)) %>% 
+    summarise(count = length(text)) %>% 
+    filter(count > 1) %>% 
+    arrange(desc(count))
+
+twitter_data %>% 
+    group_by(as_date(created_at)) %>% 
+    summarise(count = length(text)) %>% 
+    filter(count > 1) %>% 
+    arrange(desc(count)) %>% 
+    dim()
+```
+
+12. Read in the weather data. 
+    a. What are the first and last day in the dataset?
+    b. How many weather stations are there?
+    c. Do all the stations have the same amount of entries?
+    d. Which station has the most entries?
+
+```{r problem12}
+weather_data <- read_csv("weather_data.csv")
+
+## PART A
+weather_data %>% 
+    summarise(first_day = min(DATE), 
+              last_day = max(DATE))
+
+# PART B
+weather_data %>% 
+    pull(NAME) %>% 
+    unique() %>% 
+    length()
+
+# PART C
+weather_data %>% 
+    group_by(NAME) %>% 
+    summarise(count = length(NAME))
+
+# PART D
+weather_data %>% 
+    group_by(NAME) %>% 
+    summarise(count = length(NAME)) %>% 
+    slice_max(count, n = 1)
+```
+
+
+
+
+12. Join the hamster data to the weather data for the top station from the 
+previous problem (if there are any ties, pick your favorite). What issues do you 
+have and what choices did you make to join this data together?
+
+```{r problem12}
+join_weather_data <- weather_data %>% 
+    filter(NAME == "PHILADELPHIA INTERNATIONAL AIRPORT, PA US")
+
+twitter_data <- twitter_data %>% 
+    mutate(join_date = as_date(created_at))
+
+joined_data <- twitter_data %>% 
+    left_join(join_weather_data, by = c("join_date" = "DATE"))
+```
+
+Chose to use left join and had to make a date that matched the date from weather. 
+
+13. Plot the daily average temperature from the last 30 days of the dataset. 
+Create a data label that adds the favorite count of the daily hamster to the 
+plot (if there are multiple, you may choose one or paste all together).
+
+```{r problem13}
+plot_data <- joined_data %>% 
+    arrange(desc(join_date)) %>% 
+    head(n = 30) %>% 
+    group_by(join_date) %>% 
+    summarise(avg_temp = mean(TAVG),
+              label = paste0(favorite_count, collapse = ","))
+
+ggplot(plot_data, aes(x = join_date, y = avg_temp)) + 
+    geom_line() + 
+    geom_text(aes(label = label), nudge_y = 1)
+```
+
+14. What is the average precipitation (`PRCP`) at "PHILADELPHIA INTERNATIONAL 
+AIRPORT, PA US"?
+
+```{r problem14}
+weather_data %>% 
+    filter(NAME == "PHILADELPHIA INTERNATIONAL AIRPORT, PA US") %>% 
+    summarise(avg_prcp = mean(PRCP, na.rm = TRUE))
+```
+
+15. What is the overall average (`TAVG`), minimum (`TMIN`), and maximum (`TMAX`) 
+temperature of this data at "PHILADELPHIA INTERNATIONAL AIRPORT, PA US"?
+
+```{r problem15}
+weather_data %>% 
+    filter(NAME == "PHILADELPHIA INTERNATIONAL AIRPORT, PA US") %>% 
+    summarise(avg_temp = mean(TAVG, na.rm = TRUE),
+              avg_min = mean(TMIN, na.rm = TRUE),
+              avg_max = mean(TMAX, na.rm = TRUE))
+```
+
+16. What is the average, minimum, and maximum temperature from this data by 
+month at "PHILADELPHIA INTERNATIONAL AIRPORT, PA US"?
+
+```{r problem16}
+weather_data %>% 
+    filter(NAME == "PHILADELPHIA INTERNATIONAL AIRPORT, PA US") %>% 
+    group_by(month(DATE)) %>% 
+    summarise(avg_temp = mean(TAVG, na.rm = TRUE),
+              avg_min = mean(TMIN, na.rm = TRUE),
+              avg_max = mean(TMAX, na.rm = TRUE))
+```
+
+17. What is the average, minimum, and maximum from this data by year at 
+"PHILADELPHIA INTERNATIONAL AIRPORT, PA US"?
+
+```{r problem17}
+weather_data %>% 
+    filter(NAME == "PHILADELPHIA INTERNATIONAL AIRPORT, PA US") %>% 
+    group_by(year(DATE)) %>% 
+    summarise(avg_temp = mean(TAVG, na.rm = TRUE),
+              avg_min = mean(TMIN, na.rm = TRUE),
+              avg_max = mean(TMAX, na.rm = TRUE))
+```
+18. What is the average, minimum, and maximum from this data by year and month 
+at "PHILADELPHIA INTERNATIONAL AIRPORT, PA US"?
+
+```{r problem18}
+weather_data %>% 
+    filter(NAME == "PHILADELPHIA INTERNATIONAL AIRPORT, PA US") %>% 
+    group_by(month(DATE), year(DATE)) %>% 
+    summarise(avg_temp = mean(TAVG, na.rm = TRUE),
+              avg_min = mean(TMIN, na.rm = TRUE),
+              avg_max = mean(TMAX, na.rm = TRUE))
+```
+19. Plot the average daily temperature for the entire dataset grouped by station. 
+What issues do you see with the plot? Make it the clearest possible. 
+

@@ -1,0 +1,141 @@
+---
+title: "Simulation"
+author: "Jake Rozran"
+date: '`r Sys.Date()`'
+output: html_document
+---
+
+```{r setup, include = FALSE}
+library(tidyverse)
+library(furrr)
+
+options(scipen = 999)
+```
+
+## Monte Carlo Simulation
+
+What is a monte carlo simulation - write that out here.
+
+### Simple Example
+
+```{r monte_carlo, warning = FALSE}
+get_rnorm <- function(nsamp) {
+    tmp <- tibble(mean = mean(rnorm(nsamp)),
+                  samp_size = nsamp)
+    return(tmp)
+}
+
+test <- 1:100 %>% 
+    map_dfr(~get_rnorm(10))
+
+ggplot(test, aes(x = mean)) + 
+    geom_bar()
+```
+
+### Real World Example
+
+Let's talk about being a successful mutual fund manager. A fund manager comes to 
+you and says, "I've been successful for the past 10 years straight. I'm a genius. 
+Give me $10MM and I'll make you a fortune!" What is your reaction?
+
+The cool thing is that we can test this out and see for ourselves, using a 
+Monte Carlo simulation, how "skilled" this person really is!
+
+What if we assume that in any given year, irrespective of the year you had 
+before, you have a 10% chance at being a successful mutual fund manager. It's 
+hard and in other words, one year's success is independent of the next year's 
+success. Let's also assume that there are a million mutual fund managers on day 
+1.
+
+Is our person lucky? Or did they do something that required skill?
+
+```{r fund_mgr, warning = FALSE}
+fund_success <- function(num_years = 10, success_pct = 0.5) {
+    get_success <- tibble(
+        year = 1:num_years,
+        success = ifelse(runif(num_years) <= success_pct, TRUE, FALSE)
+    )
+    
+    years_in_biz <- min(get_success$year[get_success$success == FALSE])
+    
+    if(is.infinite(years_in_biz)) {
+        years_in_biz <- 10
+    }
+    
+    return(years_in_biz)
+}
+
+num_mgr <- 10000
+
+successful_fund_mgr <- 1:num_mgr %>% 
+    map_dbl(~fund_success()) 
+
+plot_dat <- tibble(mgr = 1:num_mgr,
+                   years_successful = successful_fund_mgr)
+
+ggplot(plot_dat, aes(x = successful_fund_mgr)) + 
+    geom_bar()
+```
+
+Let's speed things up a bit with parallel processing. 
+
+```{r future, warning = FALSE}
+future::plan(multisession)
+
+num_mgr <- 100000
+
+successful_fund_mgr <- 1:num_mgr %>% 
+    future_map_dbl(~fund_success(), 
+                   .progress = TRUE,
+                   .seed = TRUE) 
+
+plot_dat <- tibble(mgr = 1:num_mgr,
+                   years_successful = successful_fund_mgr)
+
+ggplot(plot_dat, aes(x = successful_fund_mgr)) + 
+    geom_bar()
+
+table(plot_dat$years_successful)
+```
+
+
+This doesn't seem like much, right? You look at Wall Street... stocked full of 
+men (mainly men) dressed in high priced suits and driving expensive cars. Surely,
+this can't be the whole picture. 
+
+We'll... this is only one year. PLUS, we don't see the ones that wash out. They 
+move away or work at the restaraunts that all the Wall St. guys go to. Let's see 
+how this plays out over 10 years.
+
+
+```{r years_10, warning = FALSE}
+years <- 30
+num_mgr <- 100000
+
+successful_fund_mgr <- 1:(num_mgr * years) %>% 
+    future_map_dbl(~fund_success(), 
+                   .progress = TRUE,
+                   .seed = TRUE) 
+
+plot_dat <- tibble(year = rep(1:years, each = num_mgr),
+                   mgr = rep(1:num_mgr, years),
+                   years_successful = successful_fund_mgr) %>% 
+    mutate(final_year = year + years_successful - 1,
+           years_successful = as.character(years_successful))
+plot_dat
+
+ggplot(plot_dat, aes(x = final_year, 
+                     group = factor(years_successful, levels = 10:1),
+                     fill = factor(years_successful, levels = 10:1))) + 
+    geom_bar() + 
+    theme(legend.title = element_blank(),
+          legend.position = "top")
+
+ggplot(plot_dat[plot_dat$final_year <= 30, ], 
+       aes(x = final_year, 
+           group = factor(years_successful, levels = 10:1),
+           fill = factor(years_successful, levels = 10:1))) + 
+    geom_bar() + 
+    theme(legend.title = element_blank(),
+          legend.position = "top")
+```

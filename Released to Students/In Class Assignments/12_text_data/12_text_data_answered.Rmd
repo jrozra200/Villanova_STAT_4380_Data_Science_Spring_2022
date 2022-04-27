@@ -1,0 +1,69 @@
+---
+title: "Text Data - in class exercise"
+author: "YOUR NAME HERE"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include = FALSE}
+library(tidyverse)
+library(mdsr)
+library(babynames)
+library(janeaustenr)
+```
+
+1. Use the `babynames` data table from the babynames package to find the 10 most 
+popular:
+    a. Boys' names ending in a vowel.
+
+```{r 1a}
+data("babynames")
+
+babynames %>% 
+    filter(sex == "M" & 
+               str_detect(tolower(name), "([aeiou]$)"))
+    
+```
+
+    b. Girls' names ending in consonate.
+
+```{r 1b}
+babynames %>% 
+    filter(sex == "F" & 
+               str_detect(tolower(name), "([^aeiou]$)"))
+```
+
+    b. Names ending with joe, jo, Joe, or Jo (e.g., Billyjoe).
+    
+```{r 1c}
+babynames %>% 
+    filter(grepl("(jo|joe)$", tolower(name)))
+```
+
+    c. Which names, if any, include any punctuation in them (i.e. not "a" to "z")
+    
+```{r 1d}
+babynames %>%
+    filter(str_detect(tolower(name), "[:punct:]"))
+
+str_detect(c("-", "anything", "some-thing"), "[:punct:]")
+```
+
+    d. How many names have more than one word in them (i.e. there is a space or
+    other punctuation in it)?
+
+```{r 1e}
+babynames %>%
+    filter(str_detect(tolower(name), "\\s+"))
+```
+
+2. Using the `janeaustenr` package and the `austen_books()` function to get 
+the text from Jane Austen's books find:
+    a. How many books are in the dataset?
+    b. How many lines are in each book in the dataset?
+    c. How many words are there in each book in the dataset?
+    d. How many unique words are there in each book in the dataset?
+    e. What words are used the most frequently in "Pride & Prejudice?"
+    f. Removing the stop-words, which words are used the most frequently?
+    g. Create a word cloud of the most frequently used words.
+    h. Create a bar chart of the most frequently used words. 

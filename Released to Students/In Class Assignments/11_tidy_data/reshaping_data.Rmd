@@ -1,0 +1,70 @@
+---
+title: "Reshaping Data"
+author: "YOUR NAME HERE"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include = FALSE}
+library(tidyverse)
+library(mdsr)
+```
+
+1. Is `mtcars` a tidy dataset?
+
+```{r mtcars}
+data("mtcars")
+mtcars$name <- row.names(mtcars)
+mtcars
+```
+Yes. This is tidy. Each item (row) represents the same kind of thing. 
+
+2. Using the `mtcars` dataset, use `pivot_longer` to turn this into a long 
+dataset. Is this tidy? Why or why not?
+
+```{r pivot_longer}
+longer_mtcars <- mtcars %>% 
+    pivot_longer(-name, names_to = "variable", values_to = "value")
+longer_mtcars
+```
+This is not tidy data, because each row kind of represents a different thing. 
+
+3. Is `population` a tidy dataset?
+
+```{r population}
+data("population")
+population
+```
+
+This is a tidy dataset. 
+
+4. Using the `population` dataset, use `pivot_wider` to turn this into a wide 
+dataset. Is this tidy? Why or why not?
+
+```{r pivot_pop_wider}
+pop_wide <- population %>% 
+    pivot_wider(names_from = year, 
+                values_from = population)
+pop_wide
+```
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+
+
+
+
+
+
+
+
+

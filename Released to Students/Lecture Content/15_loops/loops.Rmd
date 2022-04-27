@@ -1,0 +1,117 @@
+---
+title: "Iteration in R - A Lesson in Bad `R` Form"
+author: "Jake Rozran"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include = FALSE}
+library(tidyverse)
+library(mdsr)
+library(Lahman)
+```
+
+# Iteration in R
+
+Many of you are likely already aware of loops, no matter your coding experience. 
+
+There are two main types of loops in `R`:
+
+1. `for` loops
+2. `while` loops
+
+We are going to learn loops today... then we are going to do our best to avoid 
+using them for the remainder of the term. 
+
+I create loops in my code all the time... they are intuitive to me and they 
+work. However, they are very inefficient in `R` and there are some better ways 
+to handle iteration (which we'll learn over the next few classes)!
+
+## `for` loops
+
+In a `for` loop, you tell `R` exactly what to iterate over. 
+
+```{r basic_for_loop}
+for(i in 1:6) {
+    print(i)
+}
+```
+
+```{r more_for}
+for(team in unique(Teams$name)) {
+    print(team)
+}
+```
+
+All loops will repeat the code on the inside for each "iteration" defined. 
+
+What if we want to output the number of seasons for each team in the `for` loop?
+
+```{r even_more_for}
+total_data <- data.frame()
+for(team in unique(Teams$name)) {
+    team_data <- Teams %>% 
+        filter(name == team)
+    
+    first_year <- min(team_data$yearID)
+    last_year <- max(team_data$yearID)
+    seasons <- last_year - first_year + 1
+    
+    tmp <- data.frame(name = team,
+                      first_season = first_year,
+                      last_season = last_year,
+                      seasons = seasons)
+    
+    total_data <- bind_rows(total_data, tmp)
+}
+total_data
+```
+
+There's a better way to do this, though, right?
+
+```{r less_for}
+total_data <- Teams %>% 
+    group_by(name) %>%
+    summarise(first_season = min(yearID),
+              last_season = max(yearID)) %>% 
+    mutate(seasons = last_season - first_season + 1)
+total_data
+```
+What if we want to calculate the average for each column that is a numeric?
+
+We could go column by column and copy/paste the code... 
+
+```{r averages}
+str(Teams)
+```
+
+```{r looping_across_colums}
+col_names <- names(Teams)
+for(col in col_names) {
+    if(!is.numeric(Teams[, col])){
+        next
+    } 
+    
+    string <- paste0("The Average ", col, " is ", mean(Teams[, col], na.rm = TRUE))
+    print(string)
+}
+```
+
+We'll learn in the next class how to deal with this without the loop. 
+
+## `while` loops
+
+`while` loops are very similar, but will run until a condition is no longer 
+`TRUE`.
+
+```{r simple_while}
+i <- 0
+while(i <= 4) {
+    print(i)
+    i <- i + 1
+}
+```
+
+These are good for semi-dynamic functionality. If you don't know your budget, 
+but you know you need to repeat something until your budget is spent, you can 
+use a `while` loop. 

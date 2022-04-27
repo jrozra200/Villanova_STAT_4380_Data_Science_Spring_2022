@@ -1,0 +1,97 @@
+---
+title: "Scraping Web Data in R"
+author: "Jake Rozran"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(rvest)
+library(lubridate)
+```
+
+## Scraping Web Data
+
+What if you want to grab data directly from a webpage? It is in a table there, 
+but... for whatever reason, you can't pull it directly from a different source. 
+Wikipedia is a great example of this. 
+
+Let's look at [earthquakes from 1905](https://en.wikipedia.org/wiki/List_of_earthquakes_in_1905).
+
+There are a bunch of tables here... I want to analyze it myself. Enter the 
+`rvest` package.
+
+```{r webscraping}
+url <- "https://en.wikipedia.org/wiki/List_of_earthquakes_in_1905"
+
+tables <- url %>% 
+    read_html() %>% 
+    html_nodes("table")
+tables
+
+tables %>% 
+    pluck(3) %>% 
+    html_table()
+```
+
+Rad, right? Let's get each monthly table (why didn't they put these in one 
+table? who knows... )
+
+```{r putting_tables_together}
+earthquakes <- data.frame()
+for(table in c(6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28)) {
+    tmp_tab <- url %>%
+        read_html() %>% 
+        html_nodes("table") %>% 
+        pluck(table) %>% 
+        html_table()
+    
+    earthquakes <- bind_rows(earthquakes, tmp_tab)
+}
+
+earthquakes
+```
+
+So... that worked, kind of. We have all the data but there is some weirdness. 
+
+Who can name some of the weirdness?
+
+Let's do it again and fix it as we go?
+
+```{r putting_tables_together_fully}
+earthquakes <- data.frame()
+
+table_dict <- data.frame(table_num = c(6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 
+                                       28),
+                         month = c(1:12),
+                         year = 1905)
+
+for(table in table_dict$table_num) {
+    tmp_tab <- url %>%
+        read_html() %>% 
+        html_nodes("table") %>% 
+        pluck(table) %>% 
+        html_table()
+    
+    names(tmp_tab) <- as.character(tmp_tab[1, ])
+    tmp_tab <- tmp_tab %>% 
+        mutate(Date = gsub("\\[\\d+\\]", "", Date),
+               Date = as_date(paste0(table_dict$year[table_dict$table_num == table],
+                                   "-", 
+                                   table_dict$month[table_dict$table_num == table],
+                                   "-", Date)),
+               Mw = as.numeric(Mw),
+               `Depth (km)` = as.numeric(`Depth (km)`),
+               Dead = as.numeric(Dead),
+               Injured = as.numeric(Injured)) %>% 
+        filter(Date <= as_date("1906-01-01")) 
+    
+    earthquakes <- bind_rows(earthquakes, tmp_tab)
+}
+
+earthquakes
+```
+
+So, that's rad... who can think of another topic where we can pull some data 
+from? 

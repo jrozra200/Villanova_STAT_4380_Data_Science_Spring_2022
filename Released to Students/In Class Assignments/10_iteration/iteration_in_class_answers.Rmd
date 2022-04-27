@@ -1,0 +1,59 @@
+---
+title: "Iteration in Class Exercise"
+author: "Jake Rozran"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include = FALSE}
+library(tidyverse)
+library(mosaicData)
+library(nycflights13)
+```
+
+1. Use the `HELPrct` data from the `mosaicData` package to calculate the mean of 
+all numeric variables (be sure to exclude missing values).
+
+```{r problem1}
+HELPrct %>% 
+    summarise(across(where(is.numeric), mean, na.rm = TRUE))
+
+HELPrct %>% 
+    select(where(is.numeric)) %>% 
+    map_dbl(mean, na.rm = TRUE)
+```
+
+2. You have data about flight delays in a tibble called `flights` from the 
+`nycflights13` package. Write a function that, for any given airport code (e.g., 
+LGA), will return a tibble with two columns, the airport code, and the average 
+arrival delay time. 
+
+```{r problem2}
+
+delay_fnct <- function(airport_code) {
+    airport_delay <- flights %>% 
+        filter(dest == airport_code) %>%
+        summarise(airport_code = airport_code,
+                  delay = mean(arr_delay, na.rm = TRUE))
+        
+    return(airport_delay)
+}
+
+new_variable <- delay_fnct("PHL")
+new_variable
+
+```
+
+3. Using the appropriate `map` function, create a data frame with every 
+airport code and its average arrival delay time. Arrange the results from the 
+most delayed to the least. (use the function you just created above)
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,203 @@
+---
+title: "Logistic Regression"
+author: "Jake Rozran"
+date: '2022-04-20'
+output: html_document
+---
+
+```{r setup, include = FALSE}
+library(tidyverse)
+library(mdsr)
+
+install.packages("tidymodels")
+library(tidymodels)
+
+url <- "http://archive.ics.uci.edu/ml/machine-learning-databases/adult/adult.data"
+census <- read_csv(url, col_names = c("age", "workclass", "fnlwgt", "education", 
+                                      "education_1", "marital_status", 
+                                      "occupation", "relationship", 
+                                      "race", "sex", "capital_gain", 
+                                      "capital_loss", "hours_per_week", 
+                                      "native_country", "income")) %>% 
+    mutate(income = factor(income))
+census
+```
+
+## Steps to Building a Model
+
+There are a few steps to building a model (generally, and very high level):
+
+0. Understand the "baseline"
+1. Split the dataset into "test" and "train"
+    + The "test" is with-held while building the model to validate the results
+    + The "train" set is used to build the model
+2. Train the model(s)
+    + It is good practice to build multiple models with different inputs and 
+    algorithm types
+3. Validate the model(s)
+4. Compare and choose
+
+### Predicting "high" income
+
+We are going to build a model(s) that is going to predict whether or not an 
+individual makes over $50k or not. This is a binomial outcome (yes or no), so 
+we'll use a "classification model." 
+
+Let's take a look at the data to see what is expected. We want to make sure we 
+aren't wildly off the mark when we build our models.
+
+```{r baseline}
+census %>% 
+    group_by(income) %>% 
+    summarise(count = length(income)) %>% 
+    mutate(percent = count / length(census$income))
+```
+
+Just let that sync in for a second... only 24% of people make more than 50k in 
+1994 (which is nearly $90k in 2020 after accounting for inflation)... 
+
+Ok... back to the task at hand. Let's get some building going. 
+
+### Split the dataset
+
+```{r splitsies}
+set.seed(8675309) # So we get the same results
+
+census_parts <- census %>% 
+    initial_split(prop = 0.8)
+
+train <- census_parts %>% 
+    training()
+
+test <- census_parts %>% 
+    testing()
+```
+
+### Training a [Very Simple] Model
+
+```{r train}
+mod_log_1 <- logistic_reg(mode = "classification") %>%
+      set_engine("glm") %>%
+      fit(income ~ capital_gain, data = train)
+```
+
+### How did this Model Perform?
+
+```{r validation_dataset}
+pred <- test %>% 
+    select(income, capital_gain) %>% 
+    bind_cols(predict(mod_log_1, new_data = test, type = "class")) %>% 
+    rename(income_log_1 = .pred_class)
+pred
+```
+
+How accurate is the model? 
+
+Accuracy = (TP + TN) / (TP + TN + FP + FN)
+
+```{r accuracy}
+accuracy(pred, income, income_log_1)
+```
+So... we get it right 80% of the time. Ok. 
+
+Let's also look at the model summary:
+
+```{r model_summary}
+broom::tidy(mod_log_1)
+```
+
+```{r confusion_matrix}
+confusion_log_1 <- pred %>% 
+    conf_mat(truth = income, estimate = income_log_1)
+confusion_log_1
+```
+
+Here is a visual representation of the confusion matrix.
+
+```{r confusion_matrix_graph}
+autoplot(confusion_log_1) +
+    geom_label(aes(x = (xmax + xmin) / 2, 
+                   y = (ymax + ymin) / 2,
+                   label = c("TN", "FP", "FN", "TP")))
+```
+
+### New Models with Different Inputs
+
+This model is ok. I want to try again, but now with ALL of the numeric variables 
+as predictors (features).
+
+```{r new_mod}
+mod_log_2 <- logistic_reg(mode = "classification") %>%
+      set_engine("glm") %>%
+      fit(income ~ capital_gain + capital_loss + hours_per_week, data = train)
+```
+```{r validation_dataset_2}
+pred <- pred %>% 
+    bind_cols(predict(mod_log_2, new_data = test, type = "class")) %>% 
+    rename(income_log_2 = .pred_class)
+pred
+
+accuracy(pred, income, income_log_1)
+accuracy(pred, income, income_log_2)
+
+confusion_log_2 <- pred %>% 
+    conf_mat(truth = income, estimate = income_log_2)
+confusion_log_2
+
+autoplot(confusion_log_1) +
+    geom_label(aes(x = (xmax + xmin) / 2, 
+                   y = (ymax + ymin) / 2,
+                   label = c("TN", "FP", "FN", "TP")))
+autoplot(confusion_log_2) +
+    geom_label(aes(x = (xmax + xmin) / 2, 
+                   y = (ymax + ymin) / 2,
+                   label = c("TN", "FP", "FN", "TP")))
+```
+
+So - ever so slightly better. I bet these other, non-numeric variables can help 
+us. Let's see?
+
+### One more Model
+
+```{r mod_3}
+mod_log_3 <- logistic_reg(mode = "classification") %>%
+      set_engine("glm") %>%
+      fit(income ~ capital_gain + capital_loss + hours_per_week + 
+              workclass + education + occupation + relationship + 
+              race + native_country, data = train)
+```
+```{r validation_dataset_3}
+pred <- pred %>% 
+    bind_cols(predict(mod_log_3, new_data = test, type = "class")) %>% 
+    rename(income_log_3 = .pred_class)
+pred
+
+accuracy(pred, income, income_log_1)
+accuracy(pred, income, income_log_2)
+accuracy(pred, income, income_log_3)
+
+confusion_log_3 <- pred %>% 
+    conf_mat(truth = income, estimate = income_log_3)
+confusion_log_3
+
+autoplot(confusion_log_1) +
+    geom_label(aes(x = (xmax + xmin) / 2, 
+                   y = (ymax + ymin) / 2,
+                   label = c("TN", "FP", "FN", "TP")))
+autoplot(confusion_log_2) +
+    geom_label(aes(x = (xmax + xmin) / 2, 
+                   y = (ymax + ymin) / 2,
+                   label = c("TN", "FP", "FN", "TP")))
+autoplot(confusion_log_3) +
+    geom_label(aes(x = (xmax + xmin) / 2, 
+                   y = (ymax + ymin) / 2,
+                   label = c("TN", "FP", "FN", "TP")))
+
+
+broom::tidy(mod_log_3)
+```
+
+What is happening here? R is smart enough to build dummy variables to allow us 
+to put in those categorical variables, but it isn't really happy about it. I'm 
+not sure I am either. The model does well, but we SHOULD be much more thoughtful 
+on how to include those non-numeric variables. 

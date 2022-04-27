@@ -1,0 +1,85 @@
+---
+title: "More Iteration in `R`"
+author: "Jake Rozran"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include = FALSE}
+library(tidyverse)
+library(Lahman)
+
+data("Teams")
+Teams
+options(scipen = 999)
+```
+
+# Looping `across` Columns
+
+Last class we messed with a loop that checked if something was a numeric, 
+then we calculated the average. 
+
+Turns out, we don't need a loop for that!
+
+```{r across}
+Teams %>% 
+    summarise(across(where(is.numeric), mean, na.rm = TRUE))
+
+# Code from last class:
+for(col in names(Teams)) {
+    if(!is.numeric(Teams[, col])) {
+        next
+    }
+    
+    this_mean <- mean(Teams[, col], na.rm = TRUE)
+    print(paste0("the mean of ", col, " is ", this_mean))
+}
+```
+
+`across` also lets us specify the set of variables we want to use in 
+`summarise()`.
+
+```{r more_across}
+Teams %>% 
+    summarise(across(c(yearID, R:SF, BPF), mean, na.rm = TRUE))
+```
+
+# Using `map` family of functions
+
+As we did in the loop, we can also do with the `map` family of functions to 
+apply a function to each item in a list or vector. 
+
+These functions come from `purrr` which has a 
+[cheatsheet](https://github.com/rstudio/cheatsheets/blob/main/purrr.pdf)!
+
+## Using known functions
+
+```{r map}
+Teams %>% 
+    select(where(is.numeric)) %>% 
+    map_dbl(mean, na.rm = TRUE)
+```
+
+We can also iterate over the rows of data, too.
+
+```{r map_rows}
+angels <- Teams %>% 
+  filter(franchID == "ANA") %>% 
+  group_by(teamID, name) %>%
+  summarize(began = first(yearID), ended = last(yearID)) %>% 
+  arrange(began)
+angels
+
+angels %>% 
+    pull(name) %>% 
+    map_int(nchar)
+```
+
+```{r map_regression}
+mtcars %>% 
+    split(.$cyl) %>%
+    map(~ lm(mpg ~ wt, data = .)) %>% 
+    map(summary) %>% 
+    map_dbl("r.squared")
+```
+

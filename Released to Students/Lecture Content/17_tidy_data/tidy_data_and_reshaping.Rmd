@@ -1,0 +1,128 @@
+---
+title: "Tidy Data and Reshaping Data"
+author: "Jake Rozran"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include = FALSE}
+library(tidyverse)
+```
+
+# What is Tidy Data?
+
+First, let's install and load a new package, which lets us read data from 
+google sheets directly.
+
+```{r googlesheets}
+# install.packages("googlesheets4")
+library(googlesheets4)
+```
+
+Then - let's grab a dataset from Gapminder (this key is in 
+[Google Drive](https://docs.google.com/document/d/1zq1jd9SoViPaTgA31uwvTk3Sg3UeUieWIaTdDjhYSAE/edit)).
+
+```{r gapminder}
+hiv_key <- "1kWH_xdJDM4SMfT_Kzpkk-1yuxWChfurZuWYjfmv51EA"
+hiv <- read_sheet(hiv_key)
+hiv
+```
+
+This data is NOT tidy. Why is it not tidy? 
+
+Each row has multiple datapoints or observations.
+
+It is "easy" to see the trend in this data... just following a row. However, 
+each row does not refer to a specific, unique thing. 
+
+So... what data is tidy?
+
+```{r babynames}
+# install.packages("babynames")
+library(babynames)
+data("babynames")
+babynames
+```
+
+Each row is a name, year, gender, and then `n` number of people who were born 
+and named that. This is "tidy."
+
+Why is it tidy, again? For one, we can easily figure out the top names.
+
+```{r babynames_popular}
+babynames %>% 
+    group_by(sex, name) %>% 
+    summarise(total_births = sum(n)) %>% 
+    arrange(desc(total_births))
+```
+
+We could do this by `year`, too... 
+
+```{r babynames_popular_by_year}
+babynames %>% 
+    filter(year == max(babynames$year)) %>% 
+    group_by(sex, name, year) %>% 
+    summarise(total_births = sum(n)) %>% 
+    arrange(desc(total_births))
+```
+
+And `gender`... 
+
+```{r babynames_popular_by_year_and_sex}
+babynames %>% 
+    filter(year == max(babynames$year) & 
+               sex == "M") %>% 
+    group_by(sex, name, year) %>% 
+    summarise(total_births = sum(n)) %>% 
+    arrange(desc(total_births))
+```
+
+So... yes... this is tidy. 
+
+# Reshaping Data 
+
+All is not lost, though, if our data is not tidy. 
+
+In comes `pivot_wider` and `pivot_longer` to help us go to and from tidy format. 
+
+*PS - earlier I taught `reshape2` to some of you. That is a valid option, too, *
+*but not what the book teaches. Whatever works, works.*
+
+## Wide to long
+
+```{r pivot_longer}
+hiv_long <- hiv %>% 
+    select(`Estimated HIV Prevalence% - (Ages 15-49)`:`2008`) %>%
+    pivot_longer(-`Estimated HIV Prevalence% - (Ages 15-49)`, 
+                 names_to = "year", 
+                 values_to = "percent") %>% 
+    na.omit() %>% 
+    mutate(year = as.numeric(year),
+           percent = percent / 100)
+hiv_long
+```
+
+Before we made this change, we couldn't plot the data. Now we can!
+
+```{r plot_the_long}
+ggplot(hiv_long, aes(x = year, y = percent, 
+                     group = `Estimated HIV Prevalence% - (Ages 15-49)`,
+                     color = `Estimated HIV Prevalence% - (Ages 15-49)`)) + 
+    geom_line() + 
+    theme(legend.position = "none") 
+```
+
+## Pivot Wider
+
+We can also go the other way, for any number of reasons. Let's say we are 
+working with a colleague who relies on Excel? They will need the data in wide 
+format to graph it or use it.
+
+```{r pivot_wider}
+baby_wide <- babynames %>% 
+    filter(name %in% c("Jacob", "Lucas", "Elizabeth", "Regina", "Sasha", "Poppy")) %>% 
+    select(year:n) %>% 
+    pivot_wider(names_from = year, values_from = n)
+baby_wide
+```
+

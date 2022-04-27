@@ -16,7 +16,7 @@ Answer the questions below. The datasets can be found on
 [github](https://github.com/jrozra200/Villanova_STAT_4380_Data_Science_Spring_2022/tree/main/Released%20to%20Students/Projects/Data%20Wrangling) and our 
 [google drive folder](https://drive.google.com/drive/u/1/folders/1lK7-T-742p3J3QyV_8WLVySmZqYqkyj3). 
 
-This project is due on April 17. Please submit your Rmd file on Blackboard.
+This project is due on April 19. Please submit your Rmd file on Blackboard.
 
 # TEXT WRANGLING
 

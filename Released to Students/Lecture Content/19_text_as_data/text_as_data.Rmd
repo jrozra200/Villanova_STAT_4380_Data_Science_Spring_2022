@@ -1,0 +1,159 @@
+---
+title: "Text as Data"
+author: "Jake Rozran"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include = FALSE}
+library(tidyverse)
+library(mdsr)
+library(tidytext)
+
+# Macbeth_raw
+```
+
+# Turning Macbeth into a workable thing
+
+Let's use the `str_split` function (from `stringr` package) to split on the 
+end of each line. Each line is represented by the `"\r\n"`.
+
+```{r workable_text}
+macbeth <- Macbeth_raw %>% 
+    str_split("\r\n")
+# macbeth
+```
+
+`str_split` returns the text in a list. Here there is a list entry for every 
+line of text. In our case, this is just one HUGE line of text, so `str_split` 
+returns a list of length 1. Let's `pluck` that one item. 
+
+```{r really_workable_text}
+macbeth_text <- Macbeth_raw %>% 
+    str_split("\r\n") %>% 
+    pluck(1)
+# macbeth_text
+
+macbeth <- tibble(line = macbeth_text,
+                  line_number = 1:length(macbeth_text))
+macbeth
+```
+
+Lines 1 through 225 are a bunch of legalese. We can ignore that.
+
+Then, more usefully, the characters are defined starting on line 227 and ending
+on 256. Let's pull those, turn them into something useful, and save them for 
+later. 
+
+```{r get_characters}
+characters <- macbeth_text[227:256]
+characters
+
+main_characters <- characters[c(1:2, 4:19)] %>% 
+    tibble(
+        name = str_extract(., "^  ([A-Z]+|[A-Z]+ [A-Z]+),"),
+        description = str_extract(., ", .+$")
+    ) %>% 
+    mutate(name = str_remove(name, ","),
+           name = str_remove(name, "  "),
+           description = str_remove(description, ", ")) %>% 
+    select(name, description)
+main_characters
+```
+
+We'll use this table to do some analysis of speaking later. Let's now figure 
+out how many acts there are in the play.
+
+```{r select_acts}
+acts <- macbeth %>%
+    filter(str_detect(line, "ACT \\w+\\.")) %>% 
+    rename(act = line)
+acts
+```
+
+# Who Speaks the Most?
+
+Now we know the characters and the acts. Let's create a dataset now that counts 
+the speaking parts per character per act.
+
+```{r speaking_per_act}
+speaking_lines <- macbeth %>% 
+    mutate(act = case_when(
+                line_number > 2640 ~ "Act V",
+                line_number > 2015 ~ "Act IV",
+                line_number > 1408 ~ "Act III",
+                line_number > 923 ~ "Act II",
+                line_number > 275 ~ "Act I"),
+           speaker = str_extract(line, "([A-Z]+|[A-Z]+ [A-Z]+)\\."),
+           speaker = str_remove(speaker, "\\.")) %>%
+    filter(!is.na(act) & 
+               !is.na(speaker) & 
+               speaker %in% main_characters$name)
+    
+speaking_lines
+
+speaking_per_act <- speaking_lines %>%
+    group_by(act, speaker) %>% 
+    summarise(spoken_lines = length(speaker))
+speaking_per_act
+```
+
+```{r plot_the_speaking}
+ggplot(speaking_per_act, aes(x = act, y = spoken_lines, fill = speaker)) +
+    geom_bar(stat = "identity")
+
+ggplot(speaking_per_act, aes(x = act, y = spoken_lines, fill = speaker)) +
+    geom_bar(stat = "identity", position = "fill")
+```
+
+# What Words Occur the Most?
+
+```{r counting_the_words}
+words <- macbeth %>% 
+    pull(line) %>%
+    str_split(" ") %>% 
+    unlist() %>% 
+    tolower() 
+
+words_df <- tibble(words = words)
+
+words_summary <- words_df %>% 
+    group_by(words) %>% 
+    summarise(count = length(words)) %>% 
+    arrange(desc(count))
+words_summary    
+```
+
+This is mildly useful... What do we notice here? There are a bunch of regular, 
+every day words, called stop words. Also... we don't want to include the 
+punctuation! Also - we don't want blanks!
+
+```{r counting_the_cleaned_words}
+stop_words
+
+words_summary <- words_df %>% 
+    mutate(words = str_remove(words, "[[:punct:]]")) %>% # GET RID OF PUNCT
+    filter(words != "" & 
+               !words %in% stop_words$word) %>%  # GET RID OF BLANKS AND STOP WORDS
+    group_by(words) %>% 
+    summarise(count = length(words)) %>% 
+    arrange(desc(count))
+words_summary    
+```
+
+Let's look at this as a wordcloud!
+
+```{r creating_a_wordcloud}
+# install.packages("wordcloud")
+library(wordcloud)
+
+wordcloud(words_summary$words, 
+          words_summary$count, 
+          max.words = 80, 
+          colors = topo.colors(n = 10))
+
+ggplot(words_summary[1:20, ], aes(x = reorder(words, -count),
+                                  y = count)) +
+    geom_bar(stat = "identity", fill = "navy") + 
+    theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+```

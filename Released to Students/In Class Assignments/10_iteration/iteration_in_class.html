@@ -11,9 +11,9 @@
 
 <meta name="author" content="YOUR NAME HERE" />
 
-<meta name="date" content="2022-03-29" />
+<meta name="date" content="2022-03-28" />
 
-<title>Data Wrangling Project</title>
+<title>Iteration in Class Exercise</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -359,148 +359,27 @@ pre code {
 
 
 
-<h1 class="title toc-ignore">Data Wrangling Project</h1>
+<h1 class="title toc-ignore">Iteration in Class Exercise</h1>
 <h4 class="author">YOUR NAME HERE</h4>
-<h4 class="date">2022-03-29</h4>
+<h4 class="date">2022-03-28</h4>
 
 </div>
 
 
-<div id="overview" class="section level1">
-<h1>OVERVIEW</h1>
-<p>Answer the questions below. The datasets can be found on <a href="https://github.com/jrozra200/Villanova_STAT_4380_Data_Science_Spring_2022/tree/main/Released%20to%20Students/Projects/Data%20Wrangling">github</a>
-and our <a href="https://drive.google.com/drive/u/1/folders/1lK7-T-742p3J3QyV_8WLVySmZqYqkyj3">google
-drive folder</a>.</p>
-<p>This project is due on April 17. Please submit your Rmd file on
-Blackboard.</p>
-</div>
-<div id="text-wrangling" class="section level1">
-<h1>TEXT WRANGLING</h1>
-<p>For the following questions, use <code>grepl()</code> function. This
-function can find patterns in text.</p>
 <ol style="list-style-type: decimal">
-<li>Read in the Hamster data. Are all of the hamsters named?
-<ol style="list-style-type: lower-alpha">
-<li>Create a new column called <code>hname</code> searches for “NAME” in
-the <code>text</code> column and creates the value <code>TRUE</code> if
-it is there and <code>FALSE</code> if not</li>
-<li>Create a summary variable named <code>hamster_name</code> that sums
-and sorts the count each value in <code>hname</code> from highest count
-to lowest count</li>
-<li>Output <code>hamster_name</code></li>
-<li>How many posts do not include the name of the hamster?</li>
-</ol></li>
-<li>How many tagged users come from instagram? (hint: use the technique
-from the last problem)</li>
+<li>Use the <code>HELPrct</code> data from the <code>mosaicData</code>
+package to calculate the mean of all numeric variables (be sure to
+exclude missing values).</li>
+<li>You have data about flight delays in a tibble called
+<code>flights</code> from the <code>nycflights13</code> package. Write a
+function that, for any given airport code (e.g., LGA), will return a
+tibble with two columns, the airport code, and the average arrival delay
+time.</li>
+<li>Using the appropriate <code>map</code> function, create return a
+data frame with every airport code and its average arrival delay time.
+Arrange the results from the most delayed to the least. (use the
+function you just created above)</li>
 </ol>
-</div>
-<div id="distributions" class="section level1">
-<h1>DISTRIBUTIONS</h1>
-<ol start="3" style="list-style-type: decimal">
-<li>Create a histogram of favorite counts.
-<ol style="list-style-type: lower-alpha">
-<li>Is the standard amount of bins appropriate? If not, assign the
-appropriate number of bins.</li>
-<li>Make the outline of the bars black and the color of the bars
-navy</li>
-<li>Ensure that the background of the graph is clear (or white)</li>
-<li>Remove any tick marks</li>
-<li>Remove any vertical grid lines. The horizontal grid lines should be
-light gray.</li>
-<li>Make sure the axes are labeled nicely</li>
-<li>Make sure there is a title on the plot</li>
-<li>Describe the distribution</li>
-</ol></li>
-<li>Which hamster got the most favorites?</li>
-<li>Create a histogram of retweet counts.
-<ol style="list-style-type: lower-alpha">
-<li>Is the standard amount of bins appropriate? If not, assign the
-appropriate number of bins.</li>
-<li>Make the outline of the bars white and the color of the bars
-purple</li>
-<li>Ensure that the background of the graph is light gray</li>
-<li>Change the color of any tick marks to purple</li>
-<li>Remove any vertical grid lines. The horizontal grid lines should be
-white.</li>
-<li>Make sure the axes are labeled nicely</li>
-<li>Make sure there is a title on the plot</li>
-<li>Describe the distribution</li>
-</ol></li>
-<li>Which hamster got the most retweets?</li>
-</ol>
-</div>
-<div id="correlation" class="section level1">
-<h1>CORRELATION</h1>
-<ol start="7" style="list-style-type: decimal">
-<li>Is there a correlation between age of tweet (in days) and favorite
-count? You will need to create a new column that counts the age of the
-tweet. I am asking if the longer a tweet is up, does it get more likes?
-Or is it just a standard 1 day of visibility or something like that?
-(hint: remember the <code>lubridate</code> package)</li>
-</ol>
-</div>
-<div id="other-data-mining" class="section level1">
-<h1>OTHER DATA MINING</h1>
-<ol start="8" style="list-style-type: decimal">
-<li>What is the first day in the dataset? What is the last day in the
-dataset?</li>
-<li>Are there any days with multiple posts? How many days?</li>
-</ol>
-</div>
-<div id="weather-data" class="section level1">
-<h1>WEATHER DATA</h1>
-<ol start="10" style="list-style-type: decimal">
-<li>Read in the weather data.
-<ol style="list-style-type: lower-alpha">
-<li>What are the first and last day in the dataset?</li>
-<li>How many weather stations are there?</li>
-<li>Do all the stations have the same amount of entries?</li>
-<li>Which station has the most entries?</li>
-</ol></li>
-</ol>
-</div>
-<div id="joining-data" class="section level1">
-<h1>JOINING DATA</h1>
-<ol start="11" style="list-style-type: decimal">
-<li>Join the hamster data to the weather data for the top station from
-the previous problem (if there are any ties, pick your favorite). What
-issues do you have and what choices did you make to join this data
-together?</li>
-</ol>
-</div>
-<div id="plots-and-labels" class="section level1">
-<h1>PLOTS AND LABELS</h1>
-<ol start="12" style="list-style-type: decimal">
-<li>Plot the daily average temperature from the last 30 days of the
-dataset. Create a data label that adds the favorite count of the daily
-hamster to the plot (if there are multiple, you may choose one or paste
-all together).</li>
-</ol>
-</div>
-<div id="mining-the-weather-data" class="section level1">
-<h1>MINING THE WEATHER DATA</h1>
-<ol start="13" style="list-style-type: decimal">
-<li>What is the average precipitation (<code>PRCP</code>) at
-“PHILADELPHIA INTERNATIONAL AIRPORT, PA US”?</li>
-<li>What is the overall average (<code>TAVG</code>), minimum
-(<code>TMIN</code>), and maximum (<code>TMAX</code>) temperature of this
-data at “PHILADELPHIA INTERNATIONAL AIRPORT, PA US”?</li>
-<li>What is the average, minimum, and maximum temperature from this data
-by month at “PHILADELPHIA INTERNATIONAL AIRPORT, PA US”?</li>
-<li>What is the average, minimum, and maximum from this data by year at
-“PHILADELPHIA INTERNATIONAL AIRPORT, PA US”?</li>
-<li>What is the average, minimum, and maximum from this data by year and
-month at “PHILADELPHIA INTERNATIONAL AIRPORT, PA US”?</li>
-</ol>
-</div>
-<div id="making-sense-of-many-groups" class="section level1">
-<h1>MAKING SENSE OF MANY GROUPS</h1>
-<ol start="18" style="list-style-type: decimal">
-<li>Plot the average daily temperature for the entire dataset grouped by
-station. What issues do you see with the plot? Make it the clearest
-possible.</li>
-</ol>
-</div>
 
 
 

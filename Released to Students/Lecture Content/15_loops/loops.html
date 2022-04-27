@@ -9,11 +9,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="YOUR NAME HERE" />
+<meta name="author" content="Jake Rozran" />
 
-<meta name="date" content="2022-03-29" />
+<meta name="date" content="2022-03-21" />
 
-<title>Data Wrangling Project</title>
+<title>Iteration in R - A Lesson in Bad R Form</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -359,147 +359,483 @@ pre code {
 
 
 
-<h1 class="title toc-ignore">Data Wrangling Project</h1>
-<h4 class="author">YOUR NAME HERE</h4>
-<h4 class="date">2022-03-29</h4>
+<h1 class="title toc-ignore">Iteration in R - A Lesson in Bad
+<code>R</code> Form</h1>
+<h4 class="author">Jake Rozran</h4>
+<h4 class="date">2022-03-21</h4>
 
 </div>
 
 
-<div id="overview" class="section level1">
-<h1>OVERVIEW</h1>
-<p>Answer the questions below. The datasets can be found on <a href="https://github.com/jrozra200/Villanova_STAT_4380_Data_Science_Spring_2022/tree/main/Released%20to%20Students/Projects/Data%20Wrangling">github</a>
-and our <a href="https://drive.google.com/drive/u/1/folders/1lK7-T-742p3J3QyV_8WLVySmZqYqkyj3">google
-drive folder</a>.</p>
-<p>This project is due on April 17. Please submit your Rmd file on
-Blackboard.</p>
-</div>
-<div id="text-wrangling" class="section level1">
-<h1>TEXT WRANGLING</h1>
-<p>For the following questions, use <code>grepl()</code> function. This
-function can find patterns in text.</p>
+<div id="iteration-in-r" class="section level1">
+<h1>Iteration in R</h1>
+<p>Many of you are likely already aware of loops, no matter your coding
+experience.</p>
+<p>There are two main types of loops in <code>R</code>:</p>
 <ol style="list-style-type: decimal">
-<li>Read in the Hamster data. Are all of the hamsters named?
-<ol style="list-style-type: lower-alpha">
-<li>Create a new column called <code>hname</code> searches for “NAME” in
-the <code>text</code> column and creates the value <code>TRUE</code> if
-it is there and <code>FALSE</code> if not</li>
-<li>Create a summary variable named <code>hamster_name</code> that sums
-and sorts the count each value in <code>hname</code> from highest count
-to lowest count</li>
-<li>Output <code>hamster_name</code></li>
-<li>How many posts do not include the name of the hamster?</li>
-</ol></li>
-<li>How many tagged users come from instagram? (hint: use the technique
-from the last problem)</li>
+<li><code>for</code> loops</li>
+<li><code>while</code> loops</li>
 </ol>
+<p>We are going to learn loops today… then we are going to do our best
+to avoid using them for the remainder of the term.</p>
+<p>I create loops in my code all the time… they are intuitive to me and
+they work. However, they are very inefficient in <code>R</code> and
+there are some better ways to handle iteration!</p>
+<div id="for-loops" class="section level2">
+<h2><code>for</code> loops</h2>
+<p>In a <code>for</code> loop, you tell <code>R</code> exactly what to
+iterate over.</p>
+<pre class="r"><code>for(i in 1:6) {
+    print(i)
+}</code></pre>
+<pre><code>## [1] 1
+## [1] 2
+## [1] 3
+## [1] 4
+## [1] 5
+## [1] 6</code></pre>
+<pre class="r"><code>for(team in unique(Teams$name)) {
+    print(team)
+}</code></pre>
+<pre><code>## [1] &quot;Boston Red Stockings&quot;
+## [1] &quot;Chicago White Stockings&quot;
+## [1] &quot;Cleveland Forest Citys&quot;
+## [1] &quot;Fort Wayne Kekiongas&quot;
+## [1] &quot;New York Mutuals&quot;
+## [1] &quot;Philadelphia Athletics&quot;
+## [1] &quot;Rockford Forest Citys&quot;
+## [1] &quot;Troy Haymakers&quot;
+## [1] &quot;Washington Olympics&quot;
+## [1] &quot;Baltimore Canaries&quot;
+## [1] &quot;Brooklyn Eckfords&quot;
+## [1] &quot;Brooklyn Atlantics&quot;
+## [1] &quot;Middletown Mansfields&quot;
+## [1] &quot;Washington Nationals&quot;
+## [1] &quot;Baltimore Marylands&quot;
+## [1] &quot;Elizabeth Resolutes&quot;
+## [1] &quot;Philadelphia Whites&quot;
+## [1] &quot;Washington Blue Legs&quot;
+## [1] &quot;Hartford Dark Blues&quot;
+## [1] &quot;Keokuk Westerns&quot;
+## [1] &quot;New Haven Elm Citys&quot;
+## [1] &quot;Philadelphia Centennials&quot;
+## [1] &quot;St. Louis Red Stockings&quot;
+## [1] &quot;St. Louis Brown Stockings&quot;
+## [1] &quot;Boston Red Caps&quot;
+## [1] &quot;Cincinnati Reds&quot;
+## [1] &quot;Louisville Grays&quot;
+## [1] &quot;Indianapolis Blues&quot;
+## [1] &quot;Milwaukee Grays&quot;
+## [1] &quot;Providence Grays&quot;
+## [1] &quot;Buffalo Bisons&quot;
+## [1] &quot;Cleveland Blues&quot;
+## [1] &quot;Syracuse Stars&quot;
+## [1] &quot;Troy Trojans&quot;
+## [1] &quot;Worcester Ruby Legs&quot;
+## [1] &quot;Detroit Wolverines&quot;
+## [1] &quot;Baltimore Orioles&quot;
+## [1] &quot;Cincinnati Red Stockings&quot;
+## [1] &quot;Louisville Eclipse&quot;
+## [1] &quot;Pittsburg Alleghenys&quot;
+## [1] &quot;Boston Beaneaters&quot;
+## [1] &quot;Columbus Buckeyes&quot;
+## [1] &quot;New York Gothams&quot;
+## [1] &quot;New York Metropolitans&quot;
+## [1] &quot;Philadelphia Quakers&quot;
+## [1] &quot;St. Louis Browns&quot;
+## [1] &quot;Altoona Mountain City&quot;
+## [1] &quot;Baltimore Monumentals&quot;
+## [1] &quot;Boston Reds&quot;
+## [1] &quot;Chicago/Pittsburgh (Union League)&quot;
+## [1] &quot;Cincinnati Outlaw Reds&quot;
+## [1] &quot;Indianapolis Hoosiers&quot;
+## [1] &quot;Kansas City Cowboys&quot;
+## [1] &quot;Milwaukee Brewers&quot;
+## [1] &quot;Philadelphia Keystones&quot;
+## [1] &quot;Richmond Virginians&quot;
+## [1] &quot;St. Louis Maroons&quot;
+## [1] &quot;St. Paul White Caps&quot;
+## [1] &quot;Toledo Blue Stockings&quot;
+## [1] &quot;Wilmington Quicksteps&quot;
+## [1] &quot;Brooklyn Grays&quot;
+## [1] &quot;Louisville Colonels&quot;
+## [1] &quot;New York Giants&quot;
+## [1] &quot;Brooklyn Bridegrooms&quot;
+## [1] &quot;Cleveland Spiders&quot;
+## [1] &quot;Columbus Solons&quot;
+## [1] &quot;Brooklyn Gladiators&quot;
+## [1] &quot;Brooklyn Ward&#39;s Wonders&quot;
+## [1] &quot;Chicago Colts&quot;
+## [1] &quot;Chicago Pirates&quot;
+## [1] &quot;Cleveland Infants&quot;
+## [1] &quot;Philadelphia Phillies&quot;
+## [1] &quot;Pittsburgh Burghers&quot;
+## [1] &quot;Rochester Broncos&quot;
+## [1] &quot;Toledo Maumees&quot;
+## [1] &quot;Brooklyn Grooms&quot;
+## [1] &quot;Cincinnati Kelly&#39;s Killers&quot;
+## [1] &quot;Pittsburgh Pirates&quot;
+## [1] &quot;Washington Statesmen&quot;
+## [1] &quot;Washington Senators&quot;
+## [1] &quot;Chicago Orphans&quot;
+## [1] &quot;Brooklyn Superbas&quot;
+## [1] &quot;St. Louis Perfectos&quot;
+## [1] &quot;St. Louis Cardinals&quot;
+## [1] &quot;Boston Americans&quot;
+## [1] &quot;Chicago White Sox&quot;
+## [1] &quot;Detroit Tigers&quot;
+## [1] &quot;Cleveland Bronchos&quot;
+## [1] &quot;Chicago Cubs&quot;
+## [1] &quot;Cleveland Naps&quot;
+## [1] &quot;New York Highlanders&quot;
+## [1] &quot;Boston Doves&quot;
+## [1] &quot;Boston Red Sox&quot;
+## [1] &quot;Brooklyn Dodgers&quot;
+## [1] &quot;Boston Rustlers&quot;
+## [1] &quot;Boston Braves&quot;
+## [1] &quot;New York Yankees&quot;
+## [1] &quot;Baltimore Terrapins&quot;
+## [1] &quot;Brooklyn Tip-Tops&quot;
+## [1] &quot;Brooklyn Robins&quot;
+## [1] &quot;Buffalo Buffeds&quot;
+## [1] &quot;Chicago Chi-Feds&quot;
+## [1] &quot;Kansas City Packers&quot;
+## [1] &quot;Pittsburgh Rebels&quot;
+## [1] &quot;St. Louis Terriers&quot;
+## [1] &quot;Buffalo Blues&quot;
+## [1] &quot;Chicago Whales&quot;
+## [1] &quot;Cleveland Indians&quot;
+## [1] &quot;Newark Pepper&quot;
+## [1] &quot;Boston Bees&quot;
+## [1] &quot;Philadelphia Blue Jays&quot;
+## [1] &quot;Milwaukee Braves&quot;
+## [1] &quot;Cincinnati Redlegs&quot;
+## [1] &quot;Kansas City Athletics&quot;
+## [1] &quot;Los Angeles Dodgers&quot;
+## [1] &quot;San Francisco Giants&quot;
+## [1] &quot;Los Angeles Angels&quot;
+## [1] &quot;Minnesota Twins&quot;
+## [1] &quot;Houston Colt .45&#39;s&quot;
+## [1] &quot;New York Mets&quot;
+## [1] &quot;California Angels&quot;
+## [1] &quot;Houston Astros&quot;
+## [1] &quot;Atlanta Braves&quot;
+## [1] &quot;Oakland Athletics&quot;
+## [1] &quot;Kansas City Royals&quot;
+## [1] &quot;Montreal Expos&quot;
+## [1] &quot;San Diego Padres&quot;
+## [1] &quot;Seattle Pilots&quot;
+## [1] &quot;Texas Rangers&quot;
+## [1] &quot;Seattle Mariners&quot;
+## [1] &quot;Toronto Blue Jays&quot;
+## [1] &quot;Colorado Rockies&quot;
+## [1] &quot;Florida Marlins&quot;
+## [1] &quot;Anaheim Angels&quot;
+## [1] &quot;Arizona Diamondbacks&quot;
+## [1] &quot;Tampa Bay Devil Rays&quot;
+## [1] &quot;Los Angeles Angels of Anaheim&quot;
+## [1] &quot;Tampa Bay Rays&quot;
+## [1] &quot;Miami Marlins&quot;</code></pre>
+<p>All loops will repeat the code on the inside for each “iteration”
+defined.</p>
+<p>What if we want to output the number of seasons for each team in the
+<code>for</code> loop?</p>
+<pre class="r"><code>total_data &lt;- data.frame()
+for(team in unique(Teams$name)) {
+    team_data &lt;- Teams %&gt;% 
+        filter(name == team)
+    
+    first_year &lt;- min(team_data$yearID)
+    last_year &lt;- max(team_data$yearID)
+    seasons &lt;- last_year - first_year + 1
+    
+    tmp &lt;- data.frame(name = team,
+                      first_season = first_year,
+                      last_season = last_year,
+                      seasons = seasons)
+    
+    total_data &lt;- bind_rows(total_data, tmp)
+}
+total_data</code></pre>
+<pre><code>##                                  name first_season last_season seasons
+## 1                Boston Red Stockings         1871        1875       5
+## 2             Chicago White Stockings         1871        1889      19
+## 3              Cleveland Forest Citys         1871        1872       2
+## 4                Fort Wayne Kekiongas         1871        1871       1
+## 5                    New York Mutuals         1871        1876       6
+## 6              Philadelphia Athletics         1871        1954      84
+## 7               Rockford Forest Citys         1871        1871       1
+## 8                      Troy Haymakers         1871        1872       2
+## 9                 Washington Olympics         1871        1872       2
+## 10                 Baltimore Canaries         1872        1874       3
+## 11                  Brooklyn Eckfords         1872        1872       1
+## 12                 Brooklyn Atlantics         1872        1884      13
+## 13              Middletown Mansfields         1872        1872       1
+## 14               Washington Nationals         1872        2020     149
+## 15                Baltimore Marylands         1873        1873       1
+## 16                Elizabeth Resolutes         1873        1873       1
+## 17                Philadelphia Whites         1873        1875       3
+## 18               Washington Blue Legs         1873        1873       1
+## 19                Hartford Dark Blues         1874        1877       4
+## 20                    Keokuk Westerns         1875        1875       1
+## 21                New Haven Elm Citys         1875        1875       1
+## 22           Philadelphia Centennials         1875        1875       1
+## 23            St. Louis Red Stockings         1875        1875       1
+## 24          St. Louis Brown Stockings         1875        1882       8
+## 25                    Boston Red Caps         1876        1882       7
+## 26                    Cincinnati Reds         1876        2020     145
+## 27                   Louisville Grays         1876        1877       2
+## 28                 Indianapolis Blues         1878        1878       1
+## 29                    Milwaukee Grays         1878        1878       1
+## 30                   Providence Grays         1878        1885       8
+## 31                     Buffalo Bisons         1879        1890      12
+## 32                    Cleveland Blues         1879        1901      23
+## 33                     Syracuse Stars         1879        1890      12
+## 34                       Troy Trojans         1879        1882       4
+## 35                Worcester Ruby Legs         1880        1882       3
+## 36                 Detroit Wolverines         1881        1888       8
+## 37                  Baltimore Orioles         1882        2020     139
+## 38           Cincinnati Red Stockings         1882        1889       8
+## 39                 Louisville Eclipse         1882        1884       3
+## 40               Pittsburg Alleghenys         1882        1890       9
+## 41                  Boston Beaneaters         1883        1906      24
+## 42                  Columbus Buckeyes         1883        1884       2
+## 43                   New York Gothams         1883        1884       2
+## 44             New York Metropolitans         1883        1887       5
+## 45               Philadelphia Quakers         1883        1889       7
+## 46                   St. Louis Browns         1883        1953      71
+## 47              Altoona Mountain City         1884        1884       1
+## 48              Baltimore Monumentals         1884        1884       1
+## 49                        Boston Reds         1884        1891       8
+## 50  Chicago/Pittsburgh (Union League)         1884        1884       1
+## 51             Cincinnati Outlaw Reds         1884        1884       1
+## 52              Indianapolis Hoosiers         1884        1914      31
+## 53                Kansas City Cowboys         1884        1889       6
+## 54                  Milwaukee Brewers         1884        2020     137
+## 55             Philadelphia Keystones         1884        1884       1
+## 56                Richmond Virginians         1884        1884       1
+## 57                  St. Louis Maroons         1884        1886       3
+## 58                St. Paul White Caps         1884        1884       1
+## 59              Toledo Blue Stockings         1884        1884       1
+## 60              Wilmington Quicksteps         1884        1884       1
+## 61                     Brooklyn Grays         1885        1887       3
+## 62                Louisville Colonels         1885        1899      15
+## 63                    New York Giants         1885        1957      73
+## 64               Brooklyn Bridegrooms         1888        1898      11
+## 65                  Cleveland Spiders         1889        1899      11
+## 66                    Columbus Solons         1889        1891       3
+## 67                Brooklyn Gladiators         1890        1890       1
+## 68            Brooklyn Ward&#39;s Wonders         1890        1890       1
+## 69                      Chicago Colts         1890        1897       8
+## 70                    Chicago Pirates         1890        1890       1
+## 71                  Cleveland Infants         1890        1890       1
+## 72              Philadelphia Phillies         1890        2020     131
+## 73                Pittsburgh Burghers         1890        1890       1
+## 74                  Rochester Broncos         1890        1890       1
+## 75                     Toledo Maumees         1890        1890       1
+## 76                    Brooklyn Grooms         1891        1895       5
+## 77         Cincinnati Kelly&#39;s Killers         1891        1891       1
+## 78                 Pittsburgh Pirates         1891        2020     130
+## 79               Washington Statesmen         1891        1891       1
+## 80                Washington Senators         1892        1971      80
+## 81                    Chicago Orphans         1898        1902       5
+## 82                  Brooklyn Superbas         1899        1913      15
+## 83                St. Louis Perfectos         1899        1899       1
+## 84                St. Louis Cardinals         1900        2020     121
+## 85                   Boston Americans         1901        1907       7
+## 86                  Chicago White Sox         1901        2020     120
+## 87                     Detroit Tigers         1901        2020     120
+## 88                 Cleveland Bronchos         1902        1902       1
+## 89                       Chicago Cubs         1903        2020     118
+## 90                     Cleveland Naps         1903        1914      12
+## 91               New York Highlanders         1903        1912      10
+## 92                       Boston Doves         1907        1910       4
+## 93                     Boston Red Sox         1908        2020     113
+## 94                   Brooklyn Dodgers         1911        1957      47
+## 95                    Boston Rustlers         1911        1911       1
+## 96                      Boston Braves         1912        1952      41
+## 97                   New York Yankees         1913        2020     108
+## 98                Baltimore Terrapins         1914        1915       2
+## 99                  Brooklyn Tip-Tops         1914        1915       2
+## 100                   Brooklyn Robins         1914        1931      18
+## 101                   Buffalo Buffeds         1914        1914       1
+## 102                  Chicago Chi-Feds         1914        1914       1
+## 103               Kansas City Packers         1914        1915       2
+## 104                 Pittsburgh Rebels         1914        1915       2
+## 105                St. Louis Terriers         1914        1915       2
+## 106                     Buffalo Blues         1915        1915       1
+## 107                    Chicago Whales         1915        1915       1
+## 108                 Cleveland Indians         1915        2020     106
+## 109                     Newark Pepper         1915        1915       1
+## 110                       Boston Bees         1936        1940       5
+## 111            Philadelphia Blue Jays         1943        1944       2
+## 112                  Milwaukee Braves         1953        1965      13
+## 113                Cincinnati Redlegs         1954        1959       6
+## 114             Kansas City Athletics         1955        1967      13
+## 115               Los Angeles Dodgers         1958        2020      63
+## 116              San Francisco Giants         1958        2020      63
+## 117                Los Angeles Angels         1961        1964       4
+## 118                   Minnesota Twins         1961        2020      60
+## 119                Houston Colt .45&#39;s         1962        1964       3
+## 120                     New York Mets         1962        2020      59
+## 121                 California Angels         1965        1996      32
+## 122                    Houston Astros         1965        2020      56
+## 123                    Atlanta Braves         1966        2020      55
+## 124                 Oakland Athletics         1968        2020      53
+## 125                Kansas City Royals         1969        2020      52
+## 126                    Montreal Expos         1969        2004      36
+## 127                  San Diego Padres         1969        2020      52
+## 128                    Seattle Pilots         1969        1969       1
+## 129                     Texas Rangers         1972        2020      49
+## 130                  Seattle Mariners         1977        2020      44
+## 131                 Toronto Blue Jays         1977        2020      44
+## 132                  Colorado Rockies         1993        2020      28
+## 133                   Florida Marlins         1993        2011      19
+## 134                    Anaheim Angels         1997        2004       8
+## 135              Arizona Diamondbacks         1998        2020      23
+## 136              Tampa Bay Devil Rays         1998        2007      10
+## 137     Los Angeles Angels of Anaheim         2005        2020      16
+## 138                    Tampa Bay Rays         2008        2020      13
+## 139                     Miami Marlins         2012        2020       9</code></pre>
+<p>There’s a better way to do this, though, right?</p>
+<pre class="r"><code>total_data &lt;- Teams %&gt;% 
+    group_by(name) %&gt;%
+    summarise(first_season = min(yearID),
+              last_season = max(yearID)) %&gt;% 
+    mutate(seasons = last_season - first_season + 1)
+total_data</code></pre>
+<pre><code>## # A tibble: 139 × 4
+##    name                  first_season last_season seasons
+##    &lt;chr&gt;                        &lt;int&gt;       &lt;int&gt;   &lt;dbl&gt;
+##  1 Altoona Mountain City         1884        1884       1
+##  2 Anaheim Angels                1997        2004       8
+##  3 Arizona Diamondbacks          1998        2020      23
+##  4 Atlanta Braves                1966        2020      55
+##  5 Baltimore Canaries            1872        1874       3
+##  6 Baltimore Marylands           1873        1873       1
+##  7 Baltimore Monumentals         1884        1884       1
+##  8 Baltimore Orioles             1882        2020     139
+##  9 Baltimore Terrapins           1914        1915       2
+## 10 Boston Americans              1901        1907       7
+## # … with 129 more rows</code></pre>
+<p>What if we want to calculate the average for each column that is a
+numeric?</p>
+<p>We could go column by column and copy/paste the code…</p>
+<pre class="r"><code>str(Teams)</code></pre>
+<pre><code>## &#39;data.frame&#39;:    2955 obs. of  48 variables:
+##  $ yearID        : int  1871 1871 1871 1871 1871 1871 1871 1871 1871 1872 ...
+##  $ lgID          : Factor w/ 7 levels &quot;AA&quot;,&quot;AL&quot;,&quot;FL&quot;,..: 4 4 4 4 4 4 4 4 4 4 ...
+##  $ teamID        : Factor w/ 149 levels &quot;ALT&quot;,&quot;ANA&quot;,&quot;ARI&quot;,..: 24 31 39 56 90 97 111 136 142 8 ...
+##  $ franchID      : Factor w/ 120 levels &quot;ALT&quot;,&quot;ANA&quot;,&quot;ARI&quot;,..: 13 36 25 56 70 85 91 109 77 9 ...
+##  $ divID         : chr  NA NA NA NA ...
+##  $ Rank          : int  3 2 8 7 5 1 9 6 4 2 ...
+##  $ G             : int  31 28 29 19 33 28 25 29 32 58 ...
+##  $ Ghome         : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ W             : int  20 19 10 7 16 21 4 13 15 35 ...
+##  $ L             : int  10 9 19 12 17 7 21 15 15 19 ...
+##  $ DivWin        : chr  NA NA NA NA ...
+##  $ WCWin         : chr  NA NA NA NA ...
+##  $ LgWin         : chr  &quot;N&quot; &quot;N&quot; &quot;N&quot; &quot;N&quot; ...
+##  $ WSWin         : chr  NA NA NA NA ...
+##  $ R             : int  401 302 249 137 302 376 231 351 310 617 ...
+##  $ AB            : int  1372 1196 1186 746 1404 1281 1036 1248 1353 2571 ...
+##  $ H             : int  426 323 328 178 403 410 274 384 375 753 ...
+##  $ X2B           : int  70 52 35 19 43 66 44 51 54 106 ...
+##  $ X3B           : int  37 21 40 8 21 27 25 34 26 31 ...
+##  $ HR            : int  3 10 7 2 1 9 3 6 6 14 ...
+##  $ BB            : int  60 60 26 33 33 46 38 49 48 29 ...
+##  $ SO            : int  19 22 25 9 15 23 30 19 13 28 ...
+##  $ SB            : int  73 69 18 16 46 56 53 62 48 53 ...
+##  $ CS            : int  16 21 8 4 15 12 10 24 13 18 ...
+##  $ HBP           : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ SF            : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ RA            : int  303 241 341 243 313 266 287 362 303 434 ...
+##  $ ER            : int  109 77 116 97 121 137 108 153 137 166 ...
+##  $ ERA           : num  3.55 2.76 4.11 5.17 3.72 4.95 4.3 5.51 4.37 2.9 ...
+##  $ CG            : int  22 25 23 19 32 27 23 28 32 48 ...
+##  $ SHO           : int  1 0 0 1 1 0 1 0 0 1 ...
+##  $ SV            : int  3 1 0 0 0 0 0 0 0 1 ...
+##  $ IPouts        : int  828 753 762 507 879 747 678 750 846 1548 ...
+##  $ HA            : int  367 308 346 261 373 329 315 431 371 573 ...
+##  $ HRA           : int  2 6 13 5 7 3 3 4 4 3 ...
+##  $ BBA           : int  42 28 53 21 42 53 34 75 45 63 ...
+##  $ SOA           : int  23 22 34 17 22 16 16 12 13 77 ...
+##  $ E             : int  243 229 234 163 235 194 220 198 218 432 ...
+##  $ DP            : int  24 16 15 8 14 13 14 22 20 22 ...
+##  $ FP            : num  0.834 0.829 0.818 0.803 0.84 0.845 0.821 0.845 0.85 0.83 ...
+##  $ name          : chr  &quot;Boston Red Stockings&quot; &quot;Chicago White Stockings&quot; &quot;Cleveland Forest Citys&quot; &quot;Fort Wayne Kekiongas&quot; ...
+##  $ park          : chr  &quot;South End Grounds I&quot; &quot;Union Base-Ball Grounds&quot; &quot;National Association Grounds&quot; &quot;Hamilton Field&quot; ...
+##  $ attendance    : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ BPF           : int  103 104 96 101 90 102 97 101 94 106 ...
+##  $ PPF           : int  98 102 100 107 88 98 99 100 98 102 ...
+##  $ teamIDBR      : chr  &quot;BOS&quot; &quot;CHI&quot; &quot;CLE&quot; &quot;KEK&quot; ...
+##  $ teamIDlahman45: chr  &quot;BS1&quot; &quot;CH1&quot; &quot;CL1&quot; &quot;FW1&quot; ...
+##  $ teamIDretro   : chr  &quot;BS1&quot; &quot;CH1&quot; &quot;CL1&quot; &quot;FW1&quot; ...</code></pre>
+<pre class="r"><code>col_names &lt;- names(Teams)
+for(col in col_names) {
+    if(!is.numeric(Teams[, col])){
+        next
+    } 
+    
+    string &lt;- paste0(&quot;The Average &quot;, col, &quot; is &quot;, mean(Teams[, col], na.rm = TRUE))
+    print(string)
+}</code></pre>
+<pre><code>## [1] &quot;The Average yearID is 1958.23282571912&quot;
+## [1] &quot;The Average Rank is 4.05008460236887&quot;
+## [1] &quot;The Average G is 149.884940778342&quot;
+## [1] &quot;The Average Ghome is 78.014475743349&quot;
+## [1] &quot;The Average W is 74.5465313028765&quot;
+## [1] &quot;The Average L is 74.5465313028765&quot;
+## [1] &quot;The Average R is 680.496446700508&quot;
+## [1] &quot;The Average AB is 5126.25956006768&quot;
+## [1] &quot;The Average H is 1339.65685279188&quot;
+## [1] &quot;The Average X2B is 228.330287648054&quot;
+## [1] &quot;The Average X3B is 45.9096446700508&quot;
+## [1] &quot;The Average HR is 104.929272419628&quot;
+## [1] &quot;The Average BB is 473.019972918077&quot;
+## [1] &quot;The Average SO is 755.573324259952&quot;
+## [1] &quot;The Average SB is 109.786143513609&quot;
+## [1] &quot;The Average CS is 46.8728214790391&quot;
+## [1] &quot;The Average HBP is 45.4106844741235&quot;
+## [1] &quot;The Average SF is 44.2333804809052&quot;
+## [1] &quot;The Average RA is 680.495431472081&quot;
+## [1] &quot;The Average ER is 572.40372250423&quot;
+## [1] &quot;The Average ERA is 3.83635194585448&quot;
+## [1] &quot;The Average CG is 48.0111675126904&quot;
+## [1] &quot;The Average SHO is 9.58375634517767&quot;
+## [1] &quot;The Average SV is 24.2666666666667&quot;
+## [1] &quot;The Average IPouts is 4010.71607445008&quot;
+## [1] &quot;The Average HA is 1339.43417935702&quot;
+## [1] &quot;The Average HRA is 104.929272419628&quot;
+## [1] &quot;The Average BBA is 473.212182741117&quot;
+## [1] &quot;The Average SOA is 755.050084602369&quot;
+## [1] &quot;The Average E is 181.731641285956&quot;
+## [1] &quot;The Average DP is 132.66937394247&quot;
+## [1] &quot;The Average FP is 0.966163113367174&quot;
+## [1] &quot;The Average attendance is 1375101.54185351&quot;
+## [1] &quot;The Average BPF is 100.19255499154&quot;
+## [1] &quot;The Average PPF is 100.213874788494&quot;</code></pre>
+<p>We’ll learn in the next class how to deal with this without the
+loop.</p>
 </div>
-<div id="distributions" class="section level1">
-<h1>DISTRIBUTIONS</h1>
-<ol start="3" style="list-style-type: decimal">
-<li>Create a histogram of favorite counts.
-<ol style="list-style-type: lower-alpha">
-<li>Is the standard amount of bins appropriate? If not, assign the
-appropriate number of bins.</li>
-<li>Make the outline of the bars black and the color of the bars
-navy</li>
-<li>Ensure that the background of the graph is clear (or white)</li>
-<li>Remove any tick marks</li>
-<li>Remove any vertical grid lines. The horizontal grid lines should be
-light gray.</li>
-<li>Make sure the axes are labeled nicely</li>
-<li>Make sure there is a title on the plot</li>
-<li>Describe the distribution</li>
-</ol></li>
-<li>Which hamster got the most favorites?</li>
-<li>Create a histogram of retweet counts.
-<ol style="list-style-type: lower-alpha">
-<li>Is the standard amount of bins appropriate? If not, assign the
-appropriate number of bins.</li>
-<li>Make the outline of the bars white and the color of the bars
-purple</li>
-<li>Ensure that the background of the graph is light gray</li>
-<li>Change the color of any tick marks to purple</li>
-<li>Remove any vertical grid lines. The horizontal grid lines should be
-white.</li>
-<li>Make sure the axes are labeled nicely</li>
-<li>Make sure there is a title on the plot</li>
-<li>Describe the distribution</li>
-</ol></li>
-<li>Which hamster got the most retweets?</li>
-</ol>
+<div id="while-loops" class="section level2">
+<h2><code>while</code> loops</h2>
+<p><code>while</code> loops are very similar, but will run until a
+condition is no longer <code>TRUE</code>.</p>
+<pre class="r"><code>i &lt;- 0
+while(i &lt;= 4) {
+    print(i)
+    i &lt;- i + 1
+}</code></pre>
+<pre><code>## [1] 0
+## [1] 1
+## [1] 2
+## [1] 3
+## [1] 4</code></pre>
+<p>These are good for semi-dynamic functionality. If you don’t know your
+budget, but you know you need to repeat something until your budget is
+spent, you can use a <code>while</code> loop.</p>
 </div>
-<div id="correlation" class="section level1">
-<h1>CORRELATION</h1>
-<ol start="7" style="list-style-type: decimal">
-<li>Is there a correlation between age of tweet (in days) and favorite
-count? You will need to create a new column that counts the age of the
-tweet. I am asking if the longer a tweet is up, does it get more likes?
-Or is it just a standard 1 day of visibility or something like that?
-(hint: remember the <code>lubridate</code> package)</li>
-</ol>
-</div>
-<div id="other-data-mining" class="section level1">
-<h1>OTHER DATA MINING</h1>
-<ol start="8" style="list-style-type: decimal">
-<li>What is the first day in the dataset? What is the last day in the
-dataset?</li>
-<li>Are there any days with multiple posts? How many days?</li>
-</ol>
-</div>
-<div id="weather-data" class="section level1">
-<h1>WEATHER DATA</h1>
-<ol start="10" style="list-style-type: decimal">
-<li>Read in the weather data.
-<ol style="list-style-type: lower-alpha">
-<li>What are the first and last day in the dataset?</li>
-<li>How many weather stations are there?</li>
-<li>Do all the stations have the same amount of entries?</li>
-<li>Which station has the most entries?</li>
-</ol></li>
-</ol>
-</div>
-<div id="joining-data" class="section level1">
-<h1>JOINING DATA</h1>
-<ol start="11" style="list-style-type: decimal">
-<li>Join the hamster data to the weather data for the top station from
-the previous problem (if there are any ties, pick your favorite). What
-issues do you have and what choices did you make to join this data
-together?</li>
-</ol>
-</div>
-<div id="plots-and-labels" class="section level1">
-<h1>PLOTS AND LABELS</h1>
-<ol start="12" style="list-style-type: decimal">
-<li>Plot the daily average temperature from the last 30 days of the
-dataset. Create a data label that adds the favorite count of the daily
-hamster to the plot (if there are multiple, you may choose one or paste
-all together).</li>
-</ol>
-</div>
-<div id="mining-the-weather-data" class="section level1">
-<h1>MINING THE WEATHER DATA</h1>
-<ol start="13" style="list-style-type: decimal">
-<li>What is the average precipitation (<code>PRCP</code>) at
-“PHILADELPHIA INTERNATIONAL AIRPORT, PA US”?</li>
-<li>What is the overall average (<code>TAVG</code>), minimum
-(<code>TMIN</code>), and maximum (<code>TMAX</code>) temperature of this
-data at “PHILADELPHIA INTERNATIONAL AIRPORT, PA US”?</li>
-<li>What is the average, minimum, and maximum temperature from this data
-by month at “PHILADELPHIA INTERNATIONAL AIRPORT, PA US”?</li>
-<li>What is the average, minimum, and maximum from this data by year at
-“PHILADELPHIA INTERNATIONAL AIRPORT, PA US”?</li>
-<li>What is the average, minimum, and maximum from this data by year and
-month at “PHILADELPHIA INTERNATIONAL AIRPORT, PA US”?</li>
-</ol>
-</div>
-<div id="making-sense-of-many-groups" class="section level1">
-<h1>MAKING SENSE OF MANY GROUPS</h1>
-<ol start="18" style="list-style-type: decimal">
-<li>Plot the average daily temperature for the entire dataset grouped by
-station. What issues do you see with the plot? Make it the clearest
-possible.</li>
-</ol>
 </div>
 
 
